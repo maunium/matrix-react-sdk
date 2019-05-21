@@ -10,11 +10,12 @@
 /* Noto Color Emoji contains digits, in fixed-width, therefore causing
    digits in flowed text to stand out.
    TODO: Consider putting all emoji fonts to the end rather than the front. */
-$font-family: "Inter", var(--emoji-font-family), "Apple Color Emoji", "Segoe UI Emoji", "Arial", "Helvetica", sans-serif,
-    "Noto Color Emoji";
+/* meow: prefer sensible emoji fonts (apple, google) over crappy ones (twemoji) */
+$font-family: "Inter", "Apple Color Emoji", "Noto Color Emoji", "Twemoji", "Segoe UI Emoji", "Arial", "Helvetica",
+    sans-serif, "STIXGeneral";
 
-$monospace-font-family: "Inconsolata", var(--emoji-font-family), "Apple Color Emoji", "Segoe UI Emoji", "Courier",
-    monospace, "Noto Color Emoji";
+$monospace-font-family: "Fira Code", "Inconsolata", "Consolas", "Liberation Mono", "Apple Color Emoji",
+    "Noto Color Emoji", "Twemoji", "Segoe UI Emoji", "Courier", monospace, "STIXGeneral";
 
 /* Colors from Figma Compound https://www.figma.com/file/X4XTH9iS2KGJ2wFKDqkyed/Compound?node-id=559%3A120 */
 /* ******************** */
