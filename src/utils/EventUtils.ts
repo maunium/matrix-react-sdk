@@ -34,21 +34,7 @@ import { EventType } from "matrix-js-sdk/src/@types/event";
 export function isContentActionable(mxEvent: MatrixEvent): boolean {
     const { status: eventStatus } = mxEvent;
 
-    // status is SENT before remote-echo, null after
-    const isSent = !eventStatus || eventStatus === EventStatus.SENT;
-
-    if (isSent && !mxEvent.isRedacted()) {
-        if (mxEvent.getType() === 'm.room.message') {
-            const content = mxEvent.getContent();
-            if (content.msgtype && content.msgtype !== 'm.bad.encrypted' && content.hasOwnProperty('body')) {
-                return true;
-            }
-        } else if (mxEvent.getType() === 'm.sticker') {
-            return true;
-        }
-    }
-
-    return false;
+    return !eventStatus || eventStatus === EventStatus.SENT;
 }
 
 export function canEditContent(mxEvent: MatrixEvent): boolean {
