@@ -240,7 +240,8 @@ export default class MessagePanel extends React.Component<IProps, IState> {
 
         // Cache hidden events setting on mount since Settings is expensive to
         // query, and we check this in a hot code path.
-        this.showHiddenEventsInTimeline = SettingsStore.getValue("showHiddenEventsInTimeline");
+        this.showHiddenEventsInTimeline =
+            SettingsStore.getValue("showHiddenEventsInTimeline", props.room.roomId);
 
         this.showTypingNotificationsWatcherRef =
             SettingsStore.watchSetting("showTypingNotifications", null, this.onShowTypingNotificationsChange);

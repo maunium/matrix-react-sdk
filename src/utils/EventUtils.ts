@@ -111,7 +111,7 @@ export function getEventDisplayInfo(mxEvent: MatrixEvent): {
     // source tile when there's no regular tile for an event and also for
     // replace relations (which otherwise would display as a confusing
     // duplicate of the thing they are replacing).
-    if (SettingsStore.getValue("showHiddenEventsInTimeline") && !haveTileForEvent(mxEvent)) {
+    if (SettingsStore.getValue("showHiddenEventsInTimeline", mxEvent.getRoomId()) && !haveTileForEvent(mxEvent)) {
         tileHandler = "messages.ViewSourceEvent";
         isBubbleMessage = false;
         // Reuse info message avatar and sender profile styling

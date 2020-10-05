@@ -84,7 +84,7 @@ function textForMemberEvent(ev: MatrixEvent): () => string | null {
                     return () => _t('%(senderName)s changed their profile picture', { senderName });
                 } else if (!prevContent.avatar_url && content.avatar_url) {
                     return () => _t('%(senderName)s set a profile picture', { senderName });
-                } else if (SettingsStore.getValue("showHiddenEventsInTimeline")) {
+                } else if (SettingsStore.getValue("showHiddenEventsInTimeline", ev.getRoomId())) {
                     // This is a null rejoin, it will only be visible if using 'show hidden events' (labs)
                     return () => _t("%(senderName)s made no change", { senderName });
                 } else {
