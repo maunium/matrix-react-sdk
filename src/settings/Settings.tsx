@@ -965,7 +965,7 @@ export const SETTINGS: { [setting: string]: ISetting } = {
     },
     "showHiddenEventsInTimeline": {
         displayName: _td("devtools|show_hidden_events"),
-        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
+        supportedLevels: [SettingLevel.DEVICE, SettingLevel.ROOM_ACCOUNT, SettingLevel.ACCOUNT],
         default: false,
     },
     "lowBandwidth": {

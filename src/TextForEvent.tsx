@@ -178,7 +178,7 @@ function textForMemberEvent(
                     return () => _t("timeline|m.room.member|change_avatar", { senderName });
                 } else if (modAvatarUrl === Modification.Set) {
                     return () => _t("timeline|m.room.member|set_avatar", { senderName });
-                } else if (showHiddenEvents ?? SettingsStore.getValue("showHiddenEventsInTimeline")) {
+                } else if (showHiddenEvents ?? SettingsStore.getValue("showHiddenEventsInTimeline", ev.getRoomId())) {
                     // This is a null rejoin, it will only be visible if using 'show hidden events' (labs)
                     return () => _t("timeline|m.room.member|no_change", { senderName });
                 } else {
