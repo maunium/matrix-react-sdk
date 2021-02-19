@@ -72,11 +72,10 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
         if (!SettingsStore.getValue("showImages")) {
             image = null; // Don't render a button to show the image, just hide it outright
         }
-        const imageMaxWidth = 100;
-        const imageMaxHeight = 100;
+        const imageMaxWidth = 64;
+        const imageMaxHeight = 64;
         if (image && image.startsWith("mxc://")) {
-            // We deliberately don't want a square here, so use the source HTTP thumbnail function
-            image = mediaFromMxc(image).getThumbnailOfSourceHttp(imageMaxWidth, imageMaxHeight, "scale");
+            image = mediaFromMxc(image).getThumbnailOfSourceHttp(imageMaxWidth, imageMaxHeight);
         }
 
         const thumbHeight =
