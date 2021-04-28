@@ -111,7 +111,7 @@ export default class UserInfoSharedRooms extends React.PureComponent<IProps, ISt
                 key={room.roomId}
                 type={Pill.TYPE_ROOM_MENTION}
                 room={room}
-                url={new SpecPermalinkConstructor().forRoom(alias)}
+                url={new SpecPermalinkConstructor().forRoom(alias, [])}
                 inMessage={false}
                 shouldShowPillAvatar={true}
                 isSelected={false}
