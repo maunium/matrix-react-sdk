@@ -199,6 +199,9 @@ interface IProps {
     // the MatrixEvent to show
     mxEvent: MatrixEvent;
 
+    // the previous MatrixEvent in the timeline
+    prevEvent?: MatrixEvent;
+
     // true if mxEvent is redacted. This is a prop because using mxEvent.isRedacted()
     // might not be enough when deciding shouldComponentUpdate - prevProps.mxEvent
     // references the same this.props.mxEvent.
@@ -1110,6 +1113,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                     this.replyThread,
                     this.props.layout,
                     this.props.alwaysShowTimestamps || this.state.hover,
+                    this.props.prevEvent,
                 );
 
                 // tab-index=-1 to allow it to be focusable but do not add tab stop for it, primarily for screen readers

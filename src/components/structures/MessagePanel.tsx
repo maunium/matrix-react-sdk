@@ -688,6 +688,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
                     ref={this.collectEventNode.bind(this, eventId)}
                     alwaysShowTimestamps={this.props.alwaysShowTimestamps}
                     mxEvent={mxEv}
+                    prevEvent={prevEvent}
                     continuation={continuation}
                     isRedacted={mxEv.isRedacted()}
                     replacingEventId={mxEv.replacingEventId()}
