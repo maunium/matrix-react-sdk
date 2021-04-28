@@ -116,6 +116,9 @@ export interface EventTileProps {
     // the MatrixEvent to show
     mxEvent: MatrixEvent;
 
+    // the previous MatrixEvent in the timeline
+    prevEvent?: MatrixEvent;
+
     // true if mxEvent is redacted. This is a prop because using mxEvent.isRedacted()
     // might not be enough when deciding shouldComponentUpdate - prevProps.mxEvent
     // references the same this.props.mxEvent.
@@ -1172,7 +1175,7 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
         let replyChain: JSX.Element | undefined;
         if (
             haveRendererForEvent(this.props.mxEvent, MatrixClientPeg.safeGet(), this.context.showHiddenEvents) &&
-            shouldDisplayReply(this.props.mxEvent)
+            shouldDisplayReply(this.props.mxEvent, this.props.prevEvent)
         ) {
             replyChain = (
                 <ReplyChain
