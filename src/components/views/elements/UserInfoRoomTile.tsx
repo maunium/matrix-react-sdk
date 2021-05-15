@@ -72,7 +72,6 @@ export default class UserInfoRoomTile extends React.PureComponent<IProps, IState
         const roomAvatar = <DecoratedRoomAvatar
             room={this.props.room}
             avatarSize={32}
-            tag={DefaultTagID.Untagged}
             displayBadge={false}
         />;
 
