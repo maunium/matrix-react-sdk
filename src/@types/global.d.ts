@@ -39,9 +39,10 @@ import {ModalWidgetStore} from "../stores/ModalWidgetStore";
 import { WidgetLayoutStore } from "../stores/widgets/WidgetLayoutStore";
 import VoipUserMapper from "../VoipUserMapper";
 import {SpaceStoreClass} from "../stores/SpaceStore";
-import {VoiceRecording} from "../voice/VoiceRecording";
 import TypingStore from "../stores/TypingStore";
 import { EventIndexPeg } from "../indexing/EventIndexPeg";
+import {VoiceRecordingStore} from "../stores/VoiceRecordingStore";
+import PerformanceMonitor from "../performance";
 
 declare global {
     interface Window {
@@ -51,6 +52,9 @@ declare global {
         Olm: {
             init: () => Promise<void>;
         };
+
+        // Needed for Safari, unknown to TypeScript
+        webkitAudioContext: typeof AudioContext;
 
         mxContentMessages: ContentMessages;
         mxToastStore: ToastStore;
@@ -73,9 +77,11 @@ declare global {
         mxModalWidgetStore: ModalWidgetStore;
         mxVoipUserMapper: VoipUserMapper;
         mxSpaceStore: SpaceStoreClass;
-        mxVoiceRecorder: typeof VoiceRecording;
+        mxVoiceRecordingStore: VoiceRecordingStore;
         mxTypingStore: TypingStore;
         mxEventIndexPeg: EventIndexPeg;
+        mxPerformanceMonitor: PerformanceMonitor;
+        mxPerformanceEntryNames: any;
     }
 
     interface Document {
@@ -118,6 +124,16 @@ declare global {
 
     interface HTMLAudioElement {
         type?: string;
+        // sinkId & setSinkId are experimental and typescript doesn't know about them
+        sinkId: string;
+        setSinkId(outputId: string);
+    }
+
+    interface HTMLVideoElement {
+        type?: string;
+        // sinkId & setSinkId are experimental and typescript doesn't know about them
+        sinkId: string;
+        setSinkId(outputId: string);
     }
 
     interface Element {

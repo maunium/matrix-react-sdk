@@ -346,9 +346,14 @@ export function tryTransformPermalinkToLocalHref(permalink: string): string {
         return permalink;
     }
 
-    const m = permalink.match(matrixLinkify.ELEMENT_URL_PATTERN);
-    if (m) {
-        return m[1];
+    try {
+        const m = decodeURIComponent(permalink).match(matrixLinkify.ELEMENT_URL_PATTERN);
+        if (m) {
+            return m[1];
+        }
+    } catch (e) {
+        // Not a valid URI
+        return permalink;
     }
 
     // A bit of a hack to convert permalinks of unknown origin to Element links
@@ -411,8 +416,8 @@ function getPermalinkConstructor(): PermalinkConstructor {
 
 export function parsePermalink(fullUrl: string): PermalinkParts {
     const elementPrefix = SdkConfig.get()['permalinkPrefix'];
-    if (fullUrl.startsWith(matrixtoBaseUrl)) {
-        return new SpecPermalinkConstructor().parsePermalink(fullUrl);
+    if (decodeURIComponent(fullUrl).startsWith(matrixtoBaseUrl)) {
+        return new SpecPermalinkConstructor().parsePermalink(decodeURIComponent(fullUrl));
     } else if (elementPrefix && fullUrl.startsWith(elementPrefix)) {
         return new ElementPermalinkConstructor(elementPrefix).parsePermalink(fullUrl);
     }
