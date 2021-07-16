@@ -161,6 +161,7 @@
 @import "./views/messages/_CreateEvent.scss";
 @import "./views/messages/_DateSeparator.scss";
 @import "./views/messages/_EventTileBubble.scss";
+@import "./views/messages/_CallEvent.scss";
 @import "./views/messages/_MEmoteBody.scss";
 @import "./views/messages/_MFileBody.scss";
 @import "./views/messages/_MImageBody.scss";
@@ -189,6 +190,7 @@
 @import "./views/right_panel/_PinnedMessagesCard.scss";
 @import "./views/right_panel/_RoomSummaryCard.scss";
 @import "./views/right_panel/_UserInfo.scss";
+@import "./views/right_panel/_UserInfoSharedRooms.scss";
 @import "./views/right_panel/_VerificationPanel.scss";
 @import "./views/right_panel/_WidgetCard.scss";
 @import "./views/room_settings/_AliasSettings.scss";
@@ -270,3 +272,4 @@
 @import "./views/voip/_DialPadContextMenu.scss";
 @import "./views/voip/_DialPadModal.scss";
 @import "./views/voip/_VideoFeed.scss";
+@import "./views/voip/_CallViewSidebar.scss";

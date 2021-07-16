@@ -56,7 +56,6 @@ limitations under the License.
 import React from 'react';
 
 import { MatrixClientPeg } from './MatrixClientPeg';
-import PlatformPeg from './PlatformPeg';
 import Modal from './Modal';
 import { _t } from './languageHandler';
 import dis from './dispatcher/dispatcher';
@@ -80,7 +79,6 @@ import CountlyAnalytics from "./CountlyAnalytics";
 import { UIFeature } from "./settings/UIFeature";
 import { CallError } from "matrix-js-sdk/src/webrtc/call";
 import { logger } from 'matrix-js-sdk/src/logger';
-import DesktopCapturerSourcePicker from "./components/views/elements/DesktopCapturerSourcePicker";
 import { Action } from './dispatcher/actions';
 import VoipUserMapper from './VoipUserMapper';
 import { addManagedHybridWidget, isManagedHybridWidgetEnabled } from './widgets/ManagedHybrid';
@@ -99,7 +97,7 @@ const CHECK_PROTOCOLS_ATTEMPTS = 3;
 // (and store the ID of their native room)
 export const VIRTUAL_ROOM_EVENT_TYPE = 'im.vector.is_virtual_room';
 
-export enum AudioID {
+enum AudioID {
     Ring = 'ringAudio',
     Ringback = 'ringbackAudio',
     CallEnd = 'callendAudio',
@@ -129,19 +127,15 @@ interface ThirdpartyLookupResponse {
     fields: ThirdpartyLookupResponseFields;
 }
 
-// Unlike 'CallType' in js-sdk, this one includes screen sharing
-// (because a screen sharing call is only a screen sharing call to the caller,
-// to the callee it's just a video call, at least as far as the current impl
-// is concerned).
 export enum PlaceCallType {
     Voice = 'voice',
     Video = 'video',
-    ScreenSharing = 'screensharing',
 }
 
 export enum CallHandlerEvent {
     CallsChanged = "calls_changed",
     CallChangeRoom = "call_change_room",
+    SilencedCallsChanged = "silenced_calls_changed",
 }
 
 export default class CallHandler extends EventEmitter {
@@ -163,6 +157,8 @@ export default class CallHandler extends EventEmitter {
     // We need to be be able to determine the mapped room synchronously, so we
     // do the async lookup when we get new information and then store these mappings here
     private assertedIdentityNativeUsers = new Map<string, string>();
+
+    private silencedCalls = new Set<string>(); // callIds
 
     static sharedInstance() {
         if (!window.mxCallHandler) {
@@ -222,6 +218,33 @@ export default class CallHandler extends EventEmitter {
             dis.unregister(this.dispatcherRef);
             this.dispatcherRef = null;
         }
+    }
+
+    public silenceCall(callId: string) {
+        this.silencedCalls.add(callId);
+        this.emit(CallHandlerEvent.SilencedCallsChanged, this.silencedCalls);
+
+        // Don't pause audio if we have calls which are still ringing
+        if (this.areAnyCallsUnsilenced()) return;
+        this.pause(AudioID.Ring);
+    }
+
+    public unSilenceCall(callId: string) {
+        this.silencedCalls.delete(callId);
+        this.emit(CallHandlerEvent.SilencedCallsChanged, this.silencedCalls);
+        this.play(AudioID.Ring);
+    }
+
+    public isCallSilenced(callId: string): boolean {
+        return this.silencedCalls.has(callId);
+    }
+
+    /**
+     * Returns true if there is at least one unsilenced call
+     * @returns {boolean}
+     */
+    private areAnyCallsUnsilenced(): boolean {
+        return this.calls.size > this.silencedCalls.size;
     }
 
     private async checkProtocols(maxTries) {
@@ -300,6 +323,13 @@ export default class CallHandler extends EventEmitter {
             call: call,
         }, true);
     };
+
+    public getCallById(callId: string): MatrixCall {
+        for (const call of this.calls.values()) {
+            if (call.callId === callId) return call;
+        }
+        return null;
+    }
 
     getCallForRoom(roomId: string): MatrixCall {
         return this.calls.get(roomId) || null;
@@ -439,6 +469,10 @@ export default class CallHandler extends EventEmitter {
                 case CallState.InviteSent:
                     this.pause(AudioID.Ringback);
                     break;
+            }
+
+            if (newState !== CallState.Ringing) {
+                this.silencedCalls.delete(call.callId);
             }
 
             switch (newState) {
@@ -697,25 +731,6 @@ export default class CallHandler extends EventEmitter {
             call.placeVoiceCall();
         } else if (type === 'video') {
             call.placeVideoCall();
-        } else if (type === PlaceCallType.ScreenSharing) {
-            const screenCapErrorString = PlatformPeg.get().screenCaptureErrorString();
-            if (screenCapErrorString) {
-                this.removeCallForRoom(roomId);
-                console.log("Can't capture screen: " + screenCapErrorString);
-                Modal.createTrackedDialog('Call Handler', 'Unable to capture screen', ErrorDialog, {
-                    title: _t('Unable to capture screen'),
-                    description: screenCapErrorString,
-                });
-                return;
-            }
-
-            call.placeScreenSharingCall(
-                async (): Promise<DesktopCapturerSource> => {
-                    const { finished } = Modal.createDialog(DesktopCapturerSourcePicker);
-                    const [source] = await finished;
-                    return source;
-                },
-            );
         } else {
             console.error("Unknown conf call type: " + type);
         }
