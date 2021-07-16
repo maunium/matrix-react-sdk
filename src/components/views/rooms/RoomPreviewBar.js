@@ -23,6 +23,8 @@ import classNames from 'classnames';
 import { _t } from '../../../languageHandler';
 import SdkConfig from "../../../SdkConfig";
 import IdentityAuthClient from '../../../IdentityAuthClient';
+import SettingsStore from '../../../settings/SettingsStore';
+import UserInfoSharedRooms from '../right_panel/UserInfoSharedRooms';
 import { CommunityPrototypeStore } from "../../../stores/CommunityPrototypeStore";
 import { UPDATE_EVENT } from "../../../stores/AsyncStore";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
@@ -311,6 +313,7 @@ export default class RoomPreviewBar extends React.Component {
         let secondaryActionHandler;
         let secondaryActionLabel;
         let footer;
+        let extraContext;
         const extraComponents = [];
 
         const messageCase = this._getMessageCase();
@@ -501,6 +504,10 @@ export default class RoomPreviewBar extends React.Component {
                 secondaryActionLabel = _t("Reject");
                 secondaryActionHandler = this.props.onRejectClick;
 
+                if (SettingsStore.getValue("feature_show_shared_rooms")) {
+                    extraContext = <UserInfoSharedRooms userId={inviteMember.userId} compact={true} />;
+                }
+
                 if (this.props.onRejectAndIgnoreClick) {
                     extraComponents.push(
                         <AccessibleButton kind="secondary" onClick={this.props.onRejectAndIgnoreClick} key="ignore">
@@ -508,6 +515,7 @@ export default class RoomPreviewBar extends React.Component {
                         </AccessibleButton>,
                     );
                 }
+
                 break;
             }
             case MessageCase.ViewingRoom: {
@@ -587,6 +595,7 @@ export default class RoomPreviewBar extends React.Component {
                 <div className="mx_RoomPreviewBar_message">
                     { titleElement }
                     { subTitleElements }
+                    { extraContext }
                 </div>
                 { reasonElement }
                 <div className="mx_RoomPreviewBar_actions">

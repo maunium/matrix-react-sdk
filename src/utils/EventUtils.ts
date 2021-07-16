@@ -34,21 +34,7 @@ import { EventType } from "matrix-js-sdk/src/@types/event";
 export function isContentActionable(mxEvent: MatrixEvent): boolean {
     const { status: eventStatus } = mxEvent;
 
-    // status is SENT before remote-echo, null after
-    const isSent = !eventStatus || eventStatus === EventStatus.SENT;
-
-    if (isSent && !mxEvent.isRedacted()) {
-        if (mxEvent.getType() === 'm.room.message') {
-            const content = mxEvent.getContent();
-            if (content.msgtype && content.msgtype !== 'm.bad.encrypted' && content.hasOwnProperty('body')) {
-                return true;
-            }
-        } else if (mxEvent.getType() === 'm.sticker') {
-            return true;
-        }
-    }
-
-    return false;
+    return !eventStatus || eventStatus === EventStatus.SENT;
 }
 
 export function canEditContent(mxEvent: MatrixEvent): boolean {
@@ -125,7 +111,7 @@ export function getEventDisplayInfo(mxEvent: MatrixEvent): {
     // source tile when there's no regular tile for an event and also for
     // replace relations (which otherwise would display as a confusing
     // duplicate of the thing they are replacing).
-    if (SettingsStore.getValue("showHiddenEventsInTimeline") && !haveTileForEvent(mxEvent)) {
+    if (SettingsStore.getValue("showHiddenEventsInTimeline", mxEvent.getRoomId()) && !haveTileForEvent(mxEvent)) {
         tileHandler = "messages.ViewSourceEvent";
         isBubbleMessage = false;
         // Reuse info message avatar and sender profile styling

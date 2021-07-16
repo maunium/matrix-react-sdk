@@ -303,6 +303,12 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
         default: false,
     },
+    "feature_show_shared_rooms": {
+        supportedLevels: LEVELS_FEATURE,
+        displayName: _td('Show rooms in common with another user in the member info panel'),
+        default: false,
+        isFeature: true,
+    },
     "doNotDisturb": {
         supportedLevels: [SettingLevel.DEVICE],
         default: false,
@@ -665,7 +671,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     },
     "showHiddenEventsInTimeline": {
         displayName: _td("Show hidden events in timeline"),
-        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
+        supportedLevels: [SettingLevel.DEVICE, SettingLevel.ROOM_ACCOUNT, SettingLevel.ACCOUNT],
         default: false,
     },
     "lowBandwidth": {

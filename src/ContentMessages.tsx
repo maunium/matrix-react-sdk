@@ -39,6 +39,7 @@ import {
 import { IUpload } from "./models/IUpload";
 import { IAbortablePromise, IImageInfo } from "matrix-js-sdk/src/@types/partials";
 import { BlurhashEncoder } from "./BlurhashEncoder";
+import ReplyThread from "./components/views/elements/ReplyThread";
 
 const MAX_WIDTH = 800;
 const MAX_HEIGHT = 600;
@@ -418,25 +419,6 @@ export default class ContentMessages {
             return;
         }
 
-        const isQuoting = Boolean(RoomViewStore.getQuotingEvent());
-        if (isQuoting) {
-            // FIXME: Using an import will result in Element crashing
-            const QuestionDialog = sdk.getComponent("dialogs.QuestionDialog");
-            const { finished } = Modal.createTrackedDialog<[boolean]>('Upload Reply Warning', '', QuestionDialog, {
-                title: _t('Replying With Files'),
-                description: (
-                    <div>{_t(
-                        'At this time it is not possible to reply with a file. ' +
-                        'Would you like to upload this file without replying?',
-                    )}</div>
-                ),
-                hasCancelButton: true,
-                button: _t("Continue"),
-            });
-            const [shouldUpload] = await finished;
-            if (!shouldUpload) return;
-        }
-
         if (!this.mediaConfig) { // hot-path optimization to not flash a spinner if we don't need to
             const modal = Modal.createDialog(Spinner, null, 'mx_Dialog_spinner');
             await this.ensureMediaConfigFetched(matrixClient);
@@ -520,6 +502,16 @@ export default class ContentMessages {
             },
             msgtype: "", // set later
         };
+
+        const repliedToEvent = RoomViewStore.getQuotingEvent();
+        if (repliedToEvent) {
+            const replyContent = ReplyThread.makeReplyMixIn(repliedToEvent);
+            Object.assign(content, replyContent);
+            dis.dispatch({
+                action: 'reply_to_event',
+                event: null,
+            });
+        }
 
         // if we have a mime type for the file, add it to the message metadata
         if (file.type) {

@@ -211,8 +211,9 @@ export default class ReplyThread extends React.Component {
         };
     }
 
-    static makeThread(parentEv, onHeightChanged, permalinkCreator, ref, layout, alwaysShowTimestamps) {
-        if (!ReplyThread.getParentEventId(parentEv)) {
+    static makeThread(parentEv, onHeightChanged, permalinkCreator, ref, layout, alwaysShowTimestamps, prevEv) {
+        const parentId = ReplyThread.getParentEventId(parentEv);
+        if (!parentId || (prevEv && prevEv.getId() === parentId)) {
             return null;
         }
         return <ReplyThread
