@@ -80,7 +80,7 @@ const autocompleteBindings = (): KeyBinding[] => {
     const bindings = getBindingsByCategory(CategoryName.AUTOCOMPLETE);
 
     bindings.push({
-        action: KeyBindingAction.ForceCompleteAutocomplete,
+        action: KeyBindingAction.CompleteOrNextSelectionAutocomplete,
         keyCombo: {
             key: Key.TAB,
         },
@@ -90,6 +90,13 @@ const autocompleteBindings = (): KeyBinding[] => {
         keyCombo: {
             key: Key.TAB,
             ctrlKey: true,
+        },
+    });
+    bindings.push({
+        action: KeyBindingAction.PrevSelectionInAutocomplete,
+        keyCombo: {
+            key: Key.TAB,
+            shiftKey: true,
         },
     });
     bindings.push({
@@ -103,6 +110,24 @@ const autocompleteBindings = (): KeyBinding[] => {
         keyCombo: {
             key: Key.ENTER,
             ctrlKey: true,
+        },
+    });
+    bindings.push({
+        action: KeyBindingAction.CancelAutocomplete,
+        keyCombo: {
+            key: Key.ESCAPE,
+        },
+    });
+    bindings.push({
+        action: KeyBindingAction.PrevSelectionInAutocomplete,
+        keyCombo: {
+            key: Key.ARROW_UP,
+        },
+    });
+    bindings.push({
+        action: KeyBindingAction.NextSelectionInAutocomplete,
+        keyCombo: {
+            key: Key.ARROW_DOWN,
         },
     });
 

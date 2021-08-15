@@ -25,7 +25,7 @@ interface IProps {
     // method invoked with range and text content when completion is confirmed
     onConfirm: (completion: ICompletion) => void;
     // method invoked when selected (if any) completion changes
-    onSelectionChange?: (partIndex: number) => void;
+    onSelectionChange?: (completion: ICompletion, partIndex: number) => void;
     selection: ISelectionRange;
     // The room in which we're autocompleting
     room: Room;
@@ -60,7 +60,7 @@ export default class Autocomplete extends React.PureComponent<IProps, IState> {
             completionList: [],
 
             // how far down the completion list we are (THIS IS 1-INDEXED!)
-            selectionOffset: 1,
+            selectionOffset: 0,
 
             // whether we should show completions if they're available
             shouldShowCompletions: true,
@@ -105,7 +105,7 @@ export default class Autocomplete extends React.PureComponent<IProps, IState> {
                 completions: [],
                 completionList: [],
                 // Reset selected completion
-                selectionOffset: 1,
+                selectionOffset: 0,
                 // Hide the autocomplete box
                 hide: true,
             });
@@ -141,7 +141,7 @@ export default class Autocomplete extends React.PureComponent<IProps, IState> {
         const completionList = flatMap(completions, (provider) => provider.completions);
 
         // Reset selection when completion list becomes empty.
-        let selectionOffset = 1;
+        let selectionOffset = 0;
         if (completionList.length > 0) {
             /* If the currently selected completion is still in the completion list,
              try to find it and jump to it. If not, select composer.
@@ -152,7 +152,7 @@ export default class Autocomplete extends React.PureComponent<IProps, IState> {
                     : this.state.completionList[this.state.selectionOffset - 1].completion;
             selectionOffset = completionList.findIndex((completion) => completion.completion === currentSelection);
             if (selectionOffset === -1) {
-                selectionOffset = 1;
+                selectionOffset = 0;
             } else {
                 selectionOffset++; // selectionOffset is 1-indexed!
             }
@@ -164,7 +164,7 @@ export default class Autocomplete extends React.PureComponent<IProps, IState> {
         if (anyMatches) {
             hide = false;
             if (this.props.onSelectionChange) {
-                this.props.onSelectionChange(selectionOffset - 1);
+                this.props.onSelectionChange(this.state.completionList[selectionOffset - 1], selectionOffset - 1);
             }
         }
 
@@ -212,7 +212,7 @@ export default class Autocomplete extends React.PureComponent<IProps, IState> {
     private hide = (): void => {
         this.setState({
             hide: true,
-            selectionOffset: 1,
+            selectionOffset: 0,
             completions: [],
             completionList: [],
         });
@@ -253,7 +253,7 @@ export default class Autocomplete extends React.PureComponent<IProps, IState> {
     private setSelection(selectionOffset: number): void {
         this.setState({ selectionOffset, hide: false });
         if (this.props.onSelectionChange) {
-            this.props.onSelectionChange(selectionOffset - 1);
+            this.props.onSelectionChange(this.state.completionList[selectionOffset - 1], selectionOffset - 1);
         }
     }
 
