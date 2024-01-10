@@ -368,9 +368,9 @@ function textForServerACLEvent(ev: MatrixEvent): (() => string) | null {
         current.deny = [];
     }
 
-    const bannedServers = current.deny.filter((srv) => typeof srv === "string" && !prev.deny.includes(srv));
+    const bannedServers = current.deny.filter((srv: any) => typeof srv === "string" && !prev.deny.includes(srv));
     const unbannedServers = prev.deny.filter((srv) => typeof srv === "string" && !current.deny.includes(srv));
-    const allowedServers = current.allow.filter((srv) => typeof srv === "string" && !prev.allow.includes(srv));
+    const allowedServers = current.allow.filter((srv: any) => typeof srv === "string" && !prev.allow.includes(srv));
     const unallowedServers = prev.allow.filter((srv) => typeof srv === "string" && !current.allow.includes(srv));
 
     if (bannedServers.length > 0) {

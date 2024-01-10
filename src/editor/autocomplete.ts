@@ -23,7 +23,7 @@ export type GetAutocompleterComponent = () => Autocomplete | null;
 export type UpdateQuery = (test: string) => Promise<void>;
 
 export default class AutocompleteWrapperModel {
-    private queryPart: Part;
+    private queryPart?: Part;
     private partIndex?: number;
 
     public constructor(
@@ -36,7 +36,7 @@ export default class AutocompleteWrapperModel {
     public onEscape(e: KeyboardEvent): void {
         this.getAutocompleterComponent()?.onEscape(e);
         this.updateCallback({
-            replaceParts: [this.partCreator.plain(this.queryPart.text)],
+            replaceParts: [this.partCreator.plain(this.queryPart?.text ?? "")],
             close: true,
         });
     }
@@ -91,7 +91,7 @@ export default class AutocompleteWrapperModel {
     public onComponentSelectionChange(completion: ICompletion): void {
         if (!completion) {
             this.updateCallback({
-                replaceParts: [this.queryPart],
+                replaceParts: this.queryPart ? [this.queryPart] : [],
             });
         } else {
             this.updateCallback({

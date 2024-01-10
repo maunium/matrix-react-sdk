@@ -170,14 +170,14 @@ export function pickFactory(
     // Note: we avoid calling SettingsStore unless absolutely necessary - this code is on the critical path.
 
     if (asHiddenEv && showHiddenEvents) {
-        if (hideableSenders.has(mxEvent.getSender())) {
+        if (hideableSenders.has(mxEvent.getSender() ?? "")) {
             return undefined;
         }
         return JSONEventFactory;
     }
 
     const noEventFactoryFactory: () => Optional<Factory> = () =>
-        showHiddenEvents && !hideableSenders.has(mxEvent.getSender()) ? JSONEventFactory : undefined; // just don't render things that we shouldn't render
+        showHiddenEvents && !hideableSenders.has(mxEvent.getSender() ?? "") ? JSONEventFactory : undefined; // just don't render things that we shouldn't render
 
     // We run all the event type checks first as they might override the factory entirely.
 

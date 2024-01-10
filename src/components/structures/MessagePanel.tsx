@@ -462,7 +462,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
             return false; // ignored = no show (only happens if the ignore happens after an event was received)
         }
 
-        if (this.showHiddenEvents && !forceHideEvents && !hideableSenders.has(mxEv.getSender())) {
+        if (this.showHiddenEvents && !forceHideEvents && !hideableSenders.has(mxEv.getSender() ?? "")) {
             return true;
         }
 
@@ -789,7 +789,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
                 ref={this.collectEventTile.bind(this, eventId)}
                 alwaysShowTimestamps={this.props.alwaysShowTimestamps}
                 mxEvent={mxEv}
-                prevEvent={prevEvent}
+                prevEvent={prevEvent ?? undefined}
                 continuation={continuation}
                 isRedacted={mxEv.isRedacted()}
                 replacingEventId={mxEv.replacingEventId()}
