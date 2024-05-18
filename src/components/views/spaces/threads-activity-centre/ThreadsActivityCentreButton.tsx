@@ -16,19 +16,22 @@
  * /
  */
 
-import React, { forwardRef, HTMLProps } from "react";
+import React, { ComponentProps, forwardRef } from "react";
 import { Icon } from "@vector-im/compound-design-tokens/icons/threads-solid.svg";
 import classNames from "classnames";
-import { IndicatorIcon } from "@vector-im/compound-web";
+import { IconButton, Text, Tooltip } from "@vector-im/compound-web";
 
 import { _t } from "../../../../languageHandler";
-import AccessibleTooltipButton from "../../elements/AccessibleTooltipButton";
 import { NotificationLevel } from "../../../../stores/notifications/NotificationLevel";
 import { notificationLevelToIndicator } from "../../../../utils/notifications";
 
-interface ThreadsActivityCentreButtonProps extends HTMLProps<HTMLDivElement> {
+interface ThreadsActivityCentreButtonProps extends ComponentProps<typeof IconButton> {
     /**
-     * Display the `Treads` label next to the icon.
+     * Whether to disable the tooltip.
+     */
+    disableTooltip?: boolean;
+    /**
+     * Display the `Threads` label next to the icon.
      */
     displayLabel?: boolean;
     /**
@@ -40,28 +43,39 @@ interface ThreadsActivityCentreButtonProps extends HTMLProps<HTMLDivElement> {
 /**
  * A button to open the thread activity centre.
  */
-export const ThreadsActivityCentreButton = forwardRef<HTMLDivElement, ThreadsActivityCentreButtonProps>(
-    function ThreadsActivityCentreButton({ displayLabel, notificationLevel, ...props }, ref): React.JSX.Element {
+export const ThreadsActivityCentreButton = forwardRef<HTMLButtonElement, ThreadsActivityCentreButtonProps>(
+    function ThreadsActivityCentreButton(
+        { displayLabel, notificationLevel, disableTooltip, ...props },
+        ref,
+    ): React.JSX.Element {
+        // Disable tooltip when the label is displayed
+        const openTooltip = disableTooltip || displayLabel ? false : undefined;
+
         return (
-            <AccessibleTooltipButton
-                className={classNames("mx_ThreadsActivityCentreButton", { expanded: displayLabel })}
-                title={_t("common|threads")}
-                // @ts-ignore
-                // ref nightmare...
-                ref={ref}
-                forceHide={displayLabel}
-                aria-expanded={displayLabel}
-                {...props}
-            >
-                <IndicatorIcon
-                    className="mx_ThreadsActivityCentreButton_IndicatorIcon"
+            <Tooltip label={_t("common|threads")} placement="right" open={openTooltip}>
+                <IconButton
+                    aria-label={_t("common|threads")}
+                    className={classNames("mx_ThreadsActivityCentreButton", { expanded: displayLabel })}
                     indicator={notificationLevelToIndicator(notificationLevel)}
-                    size="24px"
+                    {...props}
+                    ref={ref}
                 >
-                    <Icon className="mx_ThreadsActivityCentreButton_Icon" />
-                </IndicatorIcon>
-                {displayLabel && _t("common|threads")}
-            </AccessibleTooltipButton>
+                    <>
+                        <Icon className="mx_ThreadsActivityCentreButton_Icon" />
+                        {/* This is dirty, but we need to add the label to the indicator icon */}
+                        {displayLabel && (
+                            <Text
+                                className="mx_ThreadsActivityCentreButton_Text"
+                                as="span"
+                                size="md"
+                                title={_t("common|threads")}
+                            >
+                                {_t("common|threads")}
+                            </Text>
+                        )}
+                    </>
+                </IconButton>
+            </Tooltip>
         );
     },
 );

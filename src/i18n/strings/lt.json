@@ -928,14 +928,6 @@
         "title": "Ignoruojami vartotojai",
         "view_rules": "Peržiūrėti taisykles"
     },
-    "lazy_loading": {
-        "disabled_action": "Išvalyti talpyklą ir sinchronizuoti iš naujo",
-        "disabled_description1": "Jūs anksčiau naudojote %(brand)s ant %(host)s įjungę tingų narių įkėlimą. Šioje versijoje tingus įkėlimas yra išjungtas. Kadangi vietinė talpykla nesuderinama tarp šių dviejų nustatymų, %(brand)s reikia iš naujo sinchronizuoti jūsų paskyrą.",
-        "disabled_description2": "Jei kita %(brand)s versija vis dar yra atidaryta kitame skirtuke, uždarykite jį, nes %(brand)s naudojimas tame pačiame serveryje, tuo pačiu metu įjungus ir išjungus tingų įkėlimą, sukelks problemų.",
-        "disabled_title": "Nesuderinamas vietinis podėlis",
-        "resync_description": "%(brand)s dabar naudoja 3-5 kartus mažiau atminties, įkeliant vartotojų informaciją tik prireikus. Palaukite, kol mes iš naujo sinchronizuosime su serveriu!",
-        "resync_title": "Atnaujinama %(brand)s"
-    },
     "leave_room_dialog": {
         "leave_room_question": "Ar tikrai norite išeiti iš kambario %(roomName)s?",
         "room_rejoin_warning": "Šis kambarys nėra viešas. Jūs negalėsite prisijungti iš naujo be pakvietimo."
@@ -1509,10 +1501,8 @@
         "help_about": {
             "access_token_detail": "Jūsų prieigos žetonas suteikia visišką prieigą prie paskyros. Niekam jo neduokite.",
             "brand_version": "%(brand)s versija:",
-            "chat_bot": "Kalbėtis su %(brand)s Botu",
             "clear_cache_reload": "Išvalyti podėlį ir perkrauti",
             "help_link": "Norėdami gauti pagalbos naudojant %(brand)s, paspauskite <a>čia</a>.",
-            "help_link_chat_bot": "Norėdami gauti pagalbos naudojant %(brand)s, paspauskite <a>čia</a> arba pradėkite pokalbį su mūsų botu pasinaudoję žemiau esančiu mygtuku.",
             "title": "Pagalba ir Apie",
             "versions": "Versijos"
         }
@@ -1532,16 +1522,11 @@
             "custom_theme_success": "Tema pridėta!",
             "custom_theme_url": "Pasirinktinės temos URL",
             "font_size": "Šrifto dydis",
-            "font_size_limit": "Pasirinktinis šrifto dydis gali būti tik tarp %(min)s pt ir %(max)s pt",
-            "font_size_nan": "Dydis turi būti skaičius",
-            "font_size_valid": "Naudokite dydį tarp %(min)s pt ir %(max)s pt",
-            "heading": "Tinkinti savo išvaizdą",
             "image_size_default": "Numatytas",
             "image_size_large": "Didelis",
             "layout_bubbles": "Žinučių burbulai",
             "layout_irc": "IRC (eksperimentinis)",
             "match_system_theme": "Suderinti su sistemos tema",
-            "subheading": "Išvaizdos nustatymai įtakoja tik šį %(brand)s seansą.",
             "timeline_image_size": "Paveikslėlio dydis laiko juostoje",
             "use_high_contrast": "Naudoti didelį kontrastą"
         },
@@ -2025,7 +2010,6 @@
             "tooltip_sub": "Spustelėkite kad peržiūrėti pakeitimus",
             "tooltip_title": "Keista %(date)s"
         },
-        "encrypted_historical_messages_unavailable": "Iki šio taško užšifruotos žinutės yra neprieinamos.",
         "error_no_renderer": "Nepavyko parodyti šio įvykio",
         "error_rendering_message": "Nepavyko įkelti šios žinutės",
         "historical_messages_unavailable": "Negalite matyti ankstesnių žinučių",

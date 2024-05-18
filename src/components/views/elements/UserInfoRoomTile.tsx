@@ -23,7 +23,6 @@ import classNames from "classnames";
 import AccessibleButton, { ButtonEvent } from "../../views/elements/AccessibleButton";
 import { SdkContextClass } from "../../../contexts/SDKContext";
 import DecoratedRoomAvatar from "../avatars/DecoratedRoomAvatar";
-import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 import dis from "../../../dispatcher/dispatcher";
 import { Key } from "../../../Keyboard";
 
@@ -88,7 +87,7 @@ export default class UserInfoRoomTile extends React.PureComponent<IProps, IState
         const ariaLabel = name;
         let ariaDescribedBy: string | undefined;
 
-        const props: Partial<React.ComponentProps<typeof AccessibleTooltipButton>> = {};
+        const props: Partial<React.ComponentProps<typeof AccessibleButton>> = {};
         const Button: React.ComponentType<React.ComponentProps<typeof AccessibleButton>> = AccessibleButton;
 
         return (

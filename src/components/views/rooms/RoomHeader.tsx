@@ -54,6 +54,7 @@ import { VideoRoomChatButton } from "./RoomHeader/VideoRoomChatButton";
 import { RoomKnocksBar } from "./RoomKnocksBar";
 import { isVideoRoom } from "../../../utils/video-rooms";
 import { notificationLevelToIndicator } from "../../../utils/notifications";
+import { CallGuestLinkButton } from "./RoomHeader/CallGuestLinkButton";
 
 export default function RoomHeader({
     room,
@@ -201,7 +202,10 @@ export default function RoomHeader({
     const voiceCallButton = (
         <Tooltip label={voiceCallDisabledReason ?? _t("voip|voice_call")}>
             <IconButton
-                disabled={!!voiceCallDisabledReason}
+                // We need both: isViewingCall and isConnectedToCall
+                //  - in the Lobby we are viewing a call but are not connected to it.
+                //  - in pip view we are connected to the call but not viewing it.
+                disabled={!!voiceCallDisabledReason || isViewingCall || isConnectedToCall}
                 aria-label={voiceCallDisabledReason ?? _t("voip|voice_call")}
                 onClick={(ev) => voiceCallClick(ev, callOptions[0])}
             >
@@ -248,7 +252,7 @@ export default function RoomHeader({
                             <span className="mx_RoomHeader_truncated mx_lineClamp">{roomName}</span>
 
                             {!isDirectMessage && roomState.getJoinRule() === JoinRule.Public && (
-                                <Tooltip label={_t("common|public_room")} side="right">
+                                <Tooltip label={_t("common|public_room")} placement="right">
                                     <PublicIcon
                                         width="16px"
                                         height="16px"
@@ -259,7 +263,7 @@ export default function RoomHeader({
                             )}
 
                             {isDirectMessage && e2eStatus === E2EStatus.Verified && (
-                                <Tooltip label={_t("common|verified")} side="right">
+                                <Tooltip label={_t("common|verified")} placement="right">
                                     <VerifiedIcon
                                         width="16px"
                                         height="16px"
@@ -270,7 +274,7 @@ export default function RoomHeader({
                             )}
 
                             {isDirectMessage && e2eStatus === E2EStatus.Warning && (
-                                <Tooltip label={_t("room|header_untrusted_label")} side="right">
+                                <Tooltip label={_t("room|header_untrusted_label")} placement="right">
                                     <ErrorIcon
                                         width="16px"
                                         height="16px"
@@ -310,6 +314,7 @@ export default function RoomHeader({
                         );
                     })}
 
+                    {isViewingCall && <CallGuestLinkButton room={room} />}
                     {((isConnectedToCall && isViewingCall) || isVideoRoom(room)) && <VideoRoomChatButton room={room} />}
 
                     {hasActiveCallSession && !isConnectedToCall && !isViewingCall ? (

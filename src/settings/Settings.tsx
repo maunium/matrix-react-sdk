@@ -1,6 +1,6 @@
 /*
 Copyright 2017 Travis Ralston
-Copyright 2018 - 2023 The Matrix.org Foundation C.I.C.
+Copyright 2018 - 2024 The Matrix.org Foundation C.I.C.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ import ServerSupportUnstableFeatureController from "./controllers/ServerSupportU
 import { WatchManager } from "./WatchManager";
 import { CustomTheme } from "../theme";
 import SettingsStore from "./SettingsStore";
+import AnalyticsController from "./controllers/AnalyticsController";
 
 export const defaultWatchManager = new WatchManager();
 
@@ -89,6 +90,7 @@ export enum LabGroup {
     Encryption,
     Experimental,
     Developer,
+    Ui,
 }
 
 export enum Features {
@@ -98,6 +100,7 @@ export enum Features {
     OidcNativeFlow = "feature_oidc_native_flow",
     // If true, every new login will use the new rust crypto implementation
     RustCrypto = "feature_rust_crypto",
+    ReleaseAnnouncement = "feature_release_announcement",
 }
 
 export const labGroupNames: Record<LabGroup, TranslationKey> = {
@@ -114,6 +117,7 @@ export const labGroupNames: Record<LabGroup, TranslationKey> = {
     [LabGroup.Encryption]: _td("labs|group_encryption"),
     [LabGroup.Experimental]: _td("labs|group_experimental"),
     [LabGroup.Developer]: _td("labs|group_developer"),
+    [LabGroup.Ui]: _td("labs|group_ui"),
 };
 
 export type SettingValueType =
@@ -410,7 +414,7 @@ export const SETTINGS: { [setting: string]: ISetting } = {
         controller: new SlidingSyncController(),
     },
     "feature_sliding_sync_proxy_url": {
-        // This is not a distinct feature, it is a setting for feature_sliding_sync above
+        // This is not a distinct feature, it is a legacy setting for feature_sliding_sync above
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
         default: "",
     },
@@ -518,6 +522,9 @@ export const SETTINGS: { [setting: string]: ISetting } = {
         supportedLevels: [SettingLevel.CONFIG],
         default: 0,
     },
+    /**
+     * @deprecated in favor of {@link fontSizeDelta}
+     */
     "baseFontSize": {
         displayName: _td("settings|appearance|font_size"),
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
@@ -537,12 +544,22 @@ export const SETTINGS: { [setting: string]: ISetting } = {
      * With the transition to Compound we are moving to a base font size
      * of 16px. We're taking the opportunity to move away from the `baseFontSize`
      * setting that had a 5px offset.
-     *
+     * @deprecated in favor {@link fontSizeDelta}
      */
     "baseFontSizeV2": {
         displayName: _td("settings|appearance|font_size"),
         supportedLevels: [SettingLevel.DEVICE],
-        default: FontWatcher.DEFAULT_SIZE,
+        default: "",
+        controller: new FontSizeController(),
+    },
+    /**
+     * This delta is added to the browser default font size
+     * Moving from `baseFontSizeV2` to `fontSizeDelta` to replace the default 16px to --cpd-font-size-root (browser default font size) + fontSizeDelta
+     */
+    "fontSizeDelta": {
+        displayName: _td("settings|appearance|font_size"),
+        supportedLevels: [SettingLevel.DEVICE],
+        default: FontWatcher.DEFAULT_DELTA,
         controller: new FontSizeController(),
     },
     "useCustomFontSize": {
@@ -577,13 +594,24 @@ export const SETTINGS: { [setting: string]: ISetting } = {
         supportedLevels: LEVELS_ROOM_OR_ACCOUNT,
         default: false,
     },
+    // Used to be a feature, name kept for backwards compat
     "feature_hidebold": {
-        isFeature: true,
-        labsGroup: LabGroup.Rooms,
-        configDisablesSetting: true,
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
         displayName: _td("labs|hidebold"),
         default: false,
+    },
+    "Notifications.showbold": {
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
+        displayName: _td("settings|showbold"),
+        default: false,
+        invertedSettingName: "feature_hidebold",
+        controller: new AnalyticsController("WebSettingsNotificationsShowBoldToggle"),
+    },
+    "Notifications.tac_only_notifications": {
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
+        displayName: _td("settings|tac_only_notifications"),
+        default: true,
+        controller: new AnalyticsController("WebSettingsNotificationsTACOnlyNotificationsToggle"),
     },
     "feature_ask_to_join": {
         isFeature: true,
@@ -1130,14 +1158,23 @@ export const SETTINGS: { [setting: string]: ISetting } = {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
         default: [],
     },
-    "threadsActivityCentre": {
-        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
-        labsGroup: LabGroup.Threads,
-        controller: new ReloadOnChangeController(),
-        displayName: _td("labs|threads_activity_centre"),
-        description: _td("labs|threads_activity_centre_description"),
-        default: false,
+    /**
+     * Enable or disable the release announcement feature
+     */
+    [Features.ReleaseAnnouncement]: {
         isFeature: true,
+        labsGroup: LabGroup.Ui,
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
+        default: true,
+        displayName: _td("labs|release_announcement"),
+    },
+    /**
+     * Managed by the {@link ReleaseAnnouncementStore}
+     * Store the release announcement data
+     */
+    "releaseAnnouncementData": {
+        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        default: {},
     },
     [UIFeature.RoomHistorySettings]: {
         supportedLevels: LEVELS_UI_FEATURE,
