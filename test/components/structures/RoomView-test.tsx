@@ -29,6 +29,7 @@ import {
     SearchResult,
     IEvent,
 } from "matrix-js-sdk/src/matrix";
+import { KnownMembership } from "matrix-js-sdk/src/types";
 import { MEGOLM_ALGORITHM } from "matrix-js-sdk/src/crypto/olmlib";
 import { fireEvent, render, screen, RenderResult, waitForElementToBeRemoved, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -69,7 +70,7 @@ import WidgetUtils from "../../../src/utils/WidgetUtils";
 import { WidgetType } from "../../../src/widgets/WidgetType";
 import WidgetStore from "../../../src/stores/WidgetStore";
 import { ViewRoomErrorPayload } from "../../../src/dispatcher/payloads/ViewRoomErrorPayload";
-import { SearchScope } from "../../../src/components/views/rooms/SearchBar";
+import { SearchScope } from "../../../src/Searching";
 
 const RoomView = wrapInMatrixClientContext(_RoomView);
 
@@ -235,7 +236,7 @@ describe("RoomView", () => {
     });
 
     it("updates url preview visibility on encryption state change", async () => {
-        room.getMyMembership = jest.fn().mockReturnValue("join");
+        room.getMyMembership = jest.fn().mockReturnValue(KnownMembership.Join);
         // we should be starting unencrypted
         expect(cli.isCryptoEnabled()).toEqual(false);
         expect(cli.isRoomEncrypted(room.roomId)).toEqual(false);
@@ -352,7 +353,6 @@ describe("RoomView", () => {
                             content: {
                                 algorithm: MEGOLM_ALGORITHM,
                             },
-                            user_id: cli.getUserId()!,
                             sender: cli.getUserId()!,
                             state_key: "",
                             room_id: localRoom.roomId,
@@ -580,7 +580,7 @@ describe("RoomView", () => {
         it("allows to cancel a join request", async () => {
             jest.spyOn(MatrixClientPeg, "safeGet").mockReturnValue(client);
             jest.spyOn(client, "leave").mockResolvedValue({});
-            jest.spyOn(room, "getMyMembership").mockReturnValue("knock");
+            jest.spyOn(room, "getMyMembership").mockReturnValue(KnownMembership.Knock);
 
             await mountRoomView();
             fireEvent.click(screen.getByRole("button", { name: "Cancel request" }));
@@ -591,7 +591,7 @@ describe("RoomView", () => {
     });
 
     it("should close search results when edit is clicked", async () => {
-        room.getMyMembership = jest.fn().mockReturnValue("join");
+        room.getMyMembership = jest.fn().mockReturnValue(KnownMembership.Join);
 
         const eventMapper = (obj: Partial<IEvent>) => new MatrixEvent(obj);
 
@@ -652,7 +652,7 @@ describe("RoomView", () => {
         const room2 = new Room(`!${roomCount++}:example.org`, cli, "@alice:example.org");
         rooms.set(room2.roomId, room2);
 
-        room.getMyMembership = jest.fn().mockReturnValue("join");
+        room.getMyMembership = jest.fn().mockReturnValue(KnownMembership.Join);
 
         const eventMapper = (obj: Partial<IEvent>) => new MatrixEvent(obj);
 
@@ -707,5 +707,11 @@ describe("RoomView", () => {
         await userEvent.click(await findByLabelText("Edit"));
 
         await expect(prom).resolves.toEqual(expect.objectContaining({ room_id: room2.roomId }));
+    });
+
+    it("fires Action.RoomLoaded", async () => {
+        jest.spyOn(dis, "dispatch");
+        await mountRoomView();
+        expect(dis.dispatch).toHaveBeenCalledWith({ action: Action.RoomLoaded });
     });
 });

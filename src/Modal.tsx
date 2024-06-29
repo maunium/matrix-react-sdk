@@ -20,6 +20,7 @@ import ReactDOM from "react-dom";
 import classNames from "classnames";
 import { defer, sleep } from "matrix-js-sdk/src/utils";
 import { TypedEventEmitter } from "matrix-js-sdk/src/matrix";
+import { Glass } from "@vector-im/compound-web";
 
 import dis from "./dispatcher/dispatcher";
 import AsyncWrapper from "./AsyncWrapper";
@@ -64,10 +65,12 @@ interface IOptions<C extends ComponentType> {
 
 export enum ModalManagerEvent {
     Opened = "opened",
+    Closed = "closed",
 }
 
 type HandlerMap = {
     [ModalManagerEvent.Opened]: () => void;
+    [ModalManagerEvent.Closed]: () => void;
 };
 
 export class ModalManager extends TypedEventEmitter<ModalManagerEvent, HandlerMap> {
@@ -231,6 +234,7 @@ export class ModalManager extends TypedEventEmitter<ModalManagerEvent, HandlerMa
                 }
 
                 this.reRender();
+                this.emitClosed();
             },
             deferred.promise,
         ];
@@ -327,6 +331,14 @@ export class ModalManager extends TypedEventEmitter<ModalManagerEvent, HandlerMa
         }
     }
 
+    /**
+     * Emit the closed event
+     * @private
+     */
+    private emitClosed(): void {
+        this.emit(ModalManagerEvent.Closed);
+    }
+
     private onBackgroundClick = (): void => {
         const modal = this.getCurrentModal();
         if (!modal) {
@@ -374,7 +386,9 @@ export class ModalManager extends TypedEventEmitter<ModalManagerEvent, HandlerMa
 
             const staticDialog = (
                 <div className={classes}>
-                    <div className="mx_Dialog">{this.staticModal.elem}</div>
+                    <Glass className="mx_Dialog_border">
+                        <div className="mx_Dialog">{this.staticModal.elem}</div>
+                    </Glass>
                     <div
                         data-testid="dialog-background"
                         className="mx_Dialog_background mx_Dialog_staticBackground"
@@ -397,7 +411,9 @@ export class ModalManager extends TypedEventEmitter<ModalManagerEvent, HandlerMa
 
             const dialog = (
                 <div className={classes}>
-                    <div className="mx_Dialog">{modal.elem}</div>
+                    <Glass className="mx_Dialog_border">
+                        <div className="mx_Dialog">{modal.elem}</div>
+                    </Glass>
                     <div
                         data-testid="dialog-background"
                         className="mx_Dialog_background"
@@ -406,7 +422,7 @@ export class ModalManager extends TypedEventEmitter<ModalManagerEvent, HandlerMa
                 </div>
             );
 
-            setImmediate(() => ReactDOM.render(dialog, ModalManager.getOrCreateContainer()));
+            setTimeout(() => ReactDOM.render(dialog, ModalManager.getOrCreateContainer()), 0);
         } else {
             // This is safe to call repeatedly if we happen to do that
             ReactDOM.unmountComponentAtNode(ModalManager.getOrCreateContainer());
