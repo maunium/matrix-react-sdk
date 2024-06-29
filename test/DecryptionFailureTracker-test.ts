@@ -14,14 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { mocked, Mocked } from "jest-mock";
-import { CryptoEvent, HttpApiEvent, MatrixEvent, MatrixEventEvent } from "matrix-js-sdk/src/matrix";
+import { mocked, Mocked, MockedObject } from "jest-mock";
+import { CryptoEvent, HttpApiEvent, MatrixClient, MatrixEvent, MatrixEventEvent } from "matrix-js-sdk/src/matrix";
 import { decryptExistingEvent, mkDecryptionFailureMatrixEvent } from "matrix-js-sdk/src/testing";
 import { CryptoApi, DecryptionFailureCode, UserVerificationStatus } from "matrix-js-sdk/src/crypto-api";
 import { sleep } from "matrix-js-sdk/src/utils";
 
 import { DecryptionFailureTracker, ErrorProperties } from "../src/DecryptionFailureTracker";
 import { stubClient } from "./test-utils";
+import * as Lifecycle from "../src/Lifecycle";
 
 async function createFailedDecryptionEvent(opts: { sender?: string; code?: DecryptionFailureCode } = {}) {
     return await mkDecryptionFailureMatrixEvent({
@@ -39,6 +40,10 @@ function eventDecrypted(tracker: DecryptionFailureTracker, e: MatrixEvent, nowTs
 }
 
 describe("DecryptionFailureTracker", function () {
+    afterEach(() => {
+        localStorage.clear();
+    });
+
     it("tracks a failed decryption for a visible event", async function () {
         const failedDecryptionEvent = await createFailedDecryptionEvent();
 
@@ -47,6 +52,7 @@ describe("DecryptionFailureTracker", function () {
         const tracker = new DecryptionFailureTracker(
             () => count++,
             () => "UnknownError",
+            false,
         );
 
         tracker.addVisibleEvent(failedDecryptionEvent);
@@ -73,6 +79,7 @@ describe("DecryptionFailureTracker", function () {
                 reportedRawCode = rawCode;
             },
             () => "UnknownError",
+            false,
         );
 
         tracker.addVisibleEvent(failedDecryptionEvent);
@@ -96,6 +103,7 @@ describe("DecryptionFailureTracker", function () {
         const tracker = new DecryptionFailureTracker(
             () => count++,
             () => "UnknownError",
+            false,
         );
 
         eventDecrypted(tracker, failedDecryptionEvent, Date.now());
@@ -116,6 +124,7 @@ describe("DecryptionFailureTracker", function () {
                 propertiesByErrorCode[errorCode] = properties;
             },
             (error: string) => error,
+            false,
         );
 
         // use three different errors so that we can distinguish the reports
@@ -156,6 +165,7 @@ describe("DecryptionFailureTracker", function () {
                 expect(true).toBe(false);
             },
             () => "UnknownError",
+            false,
         );
 
         tracker.addVisibleEvent(decryptedEvent);
@@ -184,6 +194,7 @@ describe("DecryptionFailureTracker", function () {
                     expect(true).toBe(false);
                 },
                 () => "UnknownError",
+                false,
             );
 
             eventDecrypted(tracker, decryptedEvent, Date.now());
@@ -211,6 +222,7 @@ describe("DecryptionFailureTracker", function () {
         const tracker = new DecryptionFailureTracker(
             () => count++,
             () => "UnknownError",
+            false,
         );
 
         tracker.addVisibleEvent(decryptedEvent);
@@ -247,6 +259,7 @@ describe("DecryptionFailureTracker", function () {
             () => count++,
             () => "UnknownError",
         );
+        await tracker.start(mockClient());
 
         tracker.addVisibleEvent(decryptedEvent);
 
@@ -264,10 +277,7 @@ describe("DecryptionFailureTracker", function () {
         expect(count).toBe(1);
     });
 
-    it.skip("should not track a failure for an event that was tracked in a previous session", async () => {
-        // This test uses localStorage, clear it beforehand
-        localStorage.clear();
-
+    it("should not report a failure for an event that was reported in a previous session", async () => {
         const decryptedEvent = await createFailedDecryptionEvent();
 
         let count = 0;
@@ -276,6 +286,7 @@ describe("DecryptionFailureTracker", function () {
             () => count++,
             () => "UnknownError",
         );
+        await tracker.start(mockClient());
 
         tracker.addVisibleEvent(decryptedEvent);
 
@@ -289,19 +300,82 @@ describe("DecryptionFailureTracker", function () {
         // Simulate the browser refreshing by destroying tracker and creating a new tracker
         // @ts-ignore access to private constructor
         const secondTracker = new DecryptionFailureTracker(
-            (total: number) => (count += total),
+            () => count++,
             () => "UnknownError",
         );
+        await secondTracker.start(mockClient());
 
         secondTracker.addVisibleEvent(decryptedEvent);
-
-        //secondTracker.loadTrackedEvents();
 
         eventDecrypted(secondTracker, decryptedEvent, Date.now());
         secondTracker.checkFailures(Infinity);
 
         // should only track a single failure per event
         expect(count).toBe(1);
+    });
+
+    it("should report a failure for an event that was tracked but not reported in a previous session", async () => {
+        const decryptedEvent = await createFailedDecryptionEvent();
+
+        let count = 0;
+
+        // @ts-ignore access to private constructor
+        const tracker = new DecryptionFailureTracker(
+            () => count++,
+            () => "UnknownError",
+        );
+        await tracker.start(mockClient());
+
+        tracker.addVisibleEvent(decryptedEvent);
+
+        // Indicate decryption
+        eventDecrypted(tracker, decryptedEvent, Date.now());
+
+        // we do *not* call `checkFailures` here
+        expect(count).toBe(0);
+
+        // Simulate the browser refreshing by destroying tracker and creating a new tracker
+        // @ts-ignore access to private constructor
+        const secondTracker = new DecryptionFailureTracker(
+            () => count++,
+            () => "UnknownError",
+        );
+        await secondTracker.start(mockClient());
+
+        secondTracker.addVisibleEvent(decryptedEvent);
+
+        eventDecrypted(secondTracker, decryptedEvent, Date.now());
+        secondTracker.checkFailures(Infinity);
+        expect(count).toBe(1);
+    });
+
+    it("should report a failure for an event that was reported before a logout/login cycle", async () => {
+        const decryptedEvent = await createFailedDecryptionEvent();
+
+        let count = 0;
+
+        // @ts-ignore access to private constructor
+        const tracker = new DecryptionFailureTracker(
+            () => count++,
+            () => "UnknownError",
+        );
+        await tracker.start(mockClient());
+
+        tracker.addVisibleEvent(decryptedEvent);
+
+        // Indicate decryption
+        eventDecrypted(tracker, decryptedEvent, Date.now());
+        tracker.checkFailures(Infinity);
+        expect(count).toBe(1);
+
+        // Simulate a logout/login cycle
+        await Lifecycle.onLoggedOut();
+        await tracker.start(mockClient());
+
+        tracker.addVisibleEvent(decryptedEvent);
+        eventDecrypted(tracker, decryptedEvent, Date.now());
+        tracker.checkFailures(Infinity);
+        expect(count).toBe(2);
     });
 
     it("should count different error codes separately for multiple failures with different error codes", async () => {
@@ -312,6 +386,7 @@ describe("DecryptionFailureTracker", function () {
             (errorCode: string) => (counts[errorCode] = (counts[errorCode] || 0) + 1),
             (error: DecryptionFailureCode) =>
                 error === DecryptionFailureCode.UNKNOWN_ERROR ? "UnknownError" : "OlmKeysNotSentError",
+            false,
         );
 
         const decryptedEvent1 = await createFailedDecryptionEvent({
@@ -349,6 +424,7 @@ describe("DecryptionFailureTracker", function () {
         const tracker = new DecryptionFailureTracker(
             (errorCode: string) => (counts[errorCode] = (counts[errorCode] || 0) + 1),
             (_errorCode: string) => "OlmUnspecifiedError",
+            false,
         );
 
         const decryptedEvent1 = await createFailedDecryptionEvent({
@@ -383,6 +459,7 @@ describe("DecryptionFailureTracker", function () {
         const tracker = new DecryptionFailureTracker(
             (errorCode: string) => (counts[errorCode] = (counts[errorCode] || 0) + 1),
             (errorCode: string) => Array.from(errorCode).reverse().join(""),
+            false,
         );
 
         const decryptedEvent = await createFailedDecryptionEvent({
@@ -408,6 +485,7 @@ describe("DecryptionFailureTracker", function () {
             },
             // @ts-ignore access to private member
             DecryptionFailureTracker.instance.errorCodeMapFn,
+            false,
         );
 
         const now = Date.now();
@@ -476,6 +554,7 @@ describe("DecryptionFailureTracker", function () {
                 propertiesByErrorCode[errorCode] = properties;
             },
             (error: string) => error,
+            false,
         );
 
         // use three different errors so that we can distinguish the reports
@@ -521,12 +600,7 @@ describe("DecryptionFailureTracker", function () {
     it("listens for client events", async () => {
         // Test that the decryption failure tracker registers the right event
         // handlers on start, and unregisters them when the client logs out.
-        const client = mocked(stubClient());
-        const mockCrypto = {
-            getVersion: jest.fn().mockReturnValue("Rust SDK 0.7.0 (61b175b), Vodozemac 0.5.1"),
-            getUserVerificationStatus: jest.fn().mockResolvedValue(new UserVerificationStatus(false, false, false)),
-        } as unknown as Mocked<CryptoApi>;
-        client.getCrypto.mockReturnValue(mockCrypto);
+        const client = mockClient();
 
         let errorCount: number = 0;
         // @ts-ignore access to private constructor
@@ -535,6 +609,7 @@ describe("DecryptionFailureTracker", function () {
                 errorCount++;
             },
             (error: string) => error,
+            false,
         );
 
         // Calling .start will start some intervals.  This test shouldn't run
@@ -568,13 +643,7 @@ describe("DecryptionFailureTracker", function () {
     });
 
     it("tracks client information", async () => {
-        const client = mocked(stubClient());
-        const mockCrypto = {
-            getVersion: jest.fn().mockReturnValue("Rust SDK 0.7.0 (61b175b), Vodozemac 0.5.1"),
-            getUserVerificationStatus: jest.fn().mockResolvedValue(new UserVerificationStatus(false, false, false)),
-        } as unknown as Mocked<CryptoApi>;
-        client.getCrypto.mockReturnValue(mockCrypto);
-
+        const client = mockClient();
         const propertiesByErrorCode: Record<string, ErrorProperties> = {};
         // @ts-ignore access to private constructor
         const tracker = new DecryptionFailureTracker(
@@ -582,6 +651,7 @@ describe("DecryptionFailureTracker", function () {
                 propertiesByErrorCode[errorCode] = properties;
             },
             (error: string) => error,
+            false,
         );
 
         // @ts-ignore access to private method
@@ -610,7 +680,9 @@ describe("DecryptionFailureTracker", function () {
         const now = Date.now();
         eventDecrypted(tracker, federatedDecryption, now);
 
-        mockCrypto.getUserVerificationStatus.mockResolvedValue(new UserVerificationStatus(true, true, false));
+        mocked(client.getCrypto()!.getUserVerificationStatus).mockResolvedValue(
+            new UserVerificationStatus(true, true, false),
+        );
         client.emit(CryptoEvent.KeysChanged, {});
         await sleep(100);
         eventDecrypted(tracker, localDecryption, now);
@@ -628,7 +700,7 @@ describe("DecryptionFailureTracker", function () {
 
         // change client params, and make sure the reports the right values
         client.getDomain.mockReturnValue("example.com");
-        mockCrypto.getVersion.mockReturnValue("Olm 0.0.0");
+        mocked(client.getCrypto()!.getVersion).mockReturnValue("Olm 0.0.0");
         // @ts-ignore access to private method
         await tracker.calculateClientProperties(client);
 
@@ -652,6 +724,7 @@ describe("DecryptionFailureTracker", function () {
                 failure = properties;
             },
             () => "UnknownError",
+            false,
         );
 
         tracker.addVisibleEvent(failedDecryptionEvent);
@@ -673,3 +746,21 @@ describe("DecryptionFailureTracker", function () {
         expect(failure?.timeToDecryptMillis).toEqual(50000);
     });
 });
+
+function mockClient(): MockedObject<MatrixClient> {
+    const client = mocked(stubClient());
+    const mockCrypto = {
+        getVersion: jest.fn().mockReturnValue("Rust SDK 0.7.0 (61b175b), Vodozemac 0.5.1"),
+        getUserVerificationStatus: jest.fn().mockResolvedValue(new UserVerificationStatus(false, false, false)),
+    } as unknown as Mocked<CryptoApi>;
+    client.getCrypto.mockReturnValue(mockCrypto);
+
+    // @ts-ignore
+    client.stopClient = jest.fn(() => {});
+    // @ts-ignore
+    client.removeAllListeners = jest.fn(() => {});
+
+    client.store = { destroy: jest.fn(() => {}) } as any;
+
+    return client;
+}

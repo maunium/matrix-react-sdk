@@ -20,7 +20,7 @@ limitations under the License.
 import React from "react";
 import { Room } from "matrix-js-sdk/src/models/room";
 import classNames from "classnames";
-import AccessibleButton, { ButtonEvent } from "../../views/elements/AccessibleButton";
+import AccessibleButton, { ButtonEvent, ButtonProps } from "../../views/elements/AccessibleButton";
 import { SdkContextClass } from "../../../contexts/SDKContext";
 import DecoratedRoomAvatar from "../avatars/DecoratedRoomAvatar";
 import dis from "../../../dispatcher/dispatcher";
@@ -87,8 +87,8 @@ export default class UserInfoRoomTile extends React.PureComponent<IProps, IState
         const ariaLabel = name;
         let ariaDescribedBy: string | undefined;
 
-        const props: Partial<React.ComponentProps<typeof AccessibleButton>> = {};
-        const Button: React.ComponentType<React.ComponentProps<typeof AccessibleButton>> = AccessibleButton;
+        const props: Partial<ButtonProps<"div">> = {};
+        const Button: React.ComponentType<ButtonProps<"div">> = AccessibleButton;
 
         return (
             <>

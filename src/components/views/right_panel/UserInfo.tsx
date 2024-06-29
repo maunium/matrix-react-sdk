@@ -44,7 +44,6 @@ import AccessibleButton, { ButtonEvent } from "../elements/AccessibleButton";
 import SdkConfig from "../../../SdkConfig";
 import SettingsStore from "../../../settings/SettingsStore";
 import MultiInviter from "../../../utils/MultiInviter";
-import { MatrixClientPeg } from "../../../MatrixClientPeg";
 import E2EIcon from "../rooms/E2EIcon";
 import { useTypedEventEmitter } from "../../../hooks/useEventEmitter";
 import { textualPowerLevel } from "../../../Roles";
@@ -1415,8 +1414,7 @@ const BasicUserInfo: React.FC<{
 
     // We don't need a perfect check here, just something to pass as "probably not our homeserver". If
     // someone does figure out how to bypass this check the worst that happens is an error.
-    // FIXME this should be using cli instead of MatrixClientPeg.matrixClient
-    if (isSynapseAdmin && member.userId.endsWith(`:${MatrixClientPeg.getHomeserverName()}`)) {
+    if (isSynapseAdmin && member.userId.endsWith(`:${cli.getDomain()}`)) {
         synapseDeactivateButton = (
             <AccessibleButton
                 kind="link"
