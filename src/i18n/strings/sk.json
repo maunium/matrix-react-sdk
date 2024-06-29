@@ -243,23 +243,11 @@
             "approve_access_warning": "Schválením prístupu pre toto zariadenie bude mať plný prístup k vášmu účtu.",
             "completing_setup": "Dokončenie nastavenia nového zariadenia",
             "confirm_code_match": "Skontrolujte, či sa nižšie uvedený kód zhoduje s vaším druhým zariadením:",
-            "connecting": "Pripájanie…",
-            "devices_connected": "Zariadenia pripojené",
-            "error_device_already_signed_in": "Druhé zariadenie je už prihlásené.",
-            "error_device_not_signed_in": "Druhé zariadenie nie je prihlásené.",
-            "error_device_unsupported": "Prepojenie s týmto zariadením nie je podporované.",
-            "error_homeserver_lacks_support": "Domovský server nepodporuje prihlasovanie do iného zariadenia.",
-            "error_invalid_scanned_code": "Naskenovaný kód je neplatný.",
-            "error_linking_incomplete": "Prepojenie nebolo dokončené v požadovanom čase.",
-            "error_request_cancelled": "Žiadosť bola zrušená.",
-            "error_request_declined": "Žiadosť bola na druhom zariadení zamietnutá.",
             "error_unexpected": "Vyskytla sa neočakávaná chyba.",
-            "review_and_approve": "Skontrolujte a schváľte prihlásenie",
             "scan_code_instruction": "Naskenujte nižšie uvedený QR kód pomocou zariadenia, ktoré je odhlásené.",
             "scan_qr_code": "Skenovať QR kód",
             "select_qr_code": "Vyberte '%(scanQRCode)s'",
             "sign_in_new_device": "Prihlásiť nové zariadenie",
-            "start_at_sign_in_screen": "Začnite na prihlasovacej obrazovke",
             "waiting_for_device": "Čaká sa na prihlásenie zariadenia"
         },
         "register_action": "Vytvoriť účet",
@@ -445,7 +433,6 @@
         "description": "Popis",
         "deselect_all": "Zrušiť výber všetkých",
         "device": "Zariadenie",
-        "display_name": "Zobrazované meno",
         "edited": "upravené",
         "email_address": "Emailová adresa",
         "emoji": "Emotikon",
@@ -485,10 +472,6 @@
         "n_members": {
             "one": "%(count)s člen",
             "other": "%(count)s členov"
-        },
-        "n_participants": {
-            "one": "1 účastník",
-            "other": "%(count)s účastníkov"
         },
         "n_rooms": {
             "one": "%(count)s miestnosť",
@@ -739,7 +722,6 @@
         "notification_state": "Stav oznámenia je <strong>%(notificationState)s</strong>",
         "notifications_debug": "Ladenie oznámení",
         "number_of_users": "Počet používateľov",
-        "observe_only": "Iba pozorovať",
         "original_event_source": "Pôvodný zdroj udalosti",
         "phase": "Fáza",
         "phase_cancelled": "Zrušené",
@@ -747,7 +729,6 @@
         "phase_requested": "Vyžiadané",
         "phase_started": "Spustené",
         "phase_transaction": "Transakcia",
-        "requester": "Žiadateľ",
         "room_encrypted": "Miestnosť je <strong>šifrovaná ✅</strong>",
         "room_id": "ID miestnosti: %(roomId)s",
         "room_not_encrypted": "Miestnosť <strong>nie je šifrovaná 🚨</strong>",
@@ -759,7 +740,6 @@
         "room_notifications_total": "Celkom: ",
         "room_notifications_type": "Typ: ",
         "room_status": "Stav miestnosti",
-        "room_unread_status": "Stav neprečítaných v miestnosti: <strong>%(status)s</strong>",
         "room_unread_status_count": {
             "one": "Stav neprečítaných v miestnosti: <strong>%(status)s</strong>, počet: <strong>%(count)s</strong>",
             "few": "Stav neprečítaných v miestnosti: <strong>%(status)s</strong>, počet: <strong>%(count)s</strong>",
@@ -1275,7 +1255,6 @@
         "failed_generic": "Operácia zlyhala",
         "failed_title": "Pozvanie zlyhalo",
         "invalid_address": "Nerozpoznaná adresa",
-        "key_share_warning": "Pozvaní ľudia si budú môcť prečítať staré správy.",
         "name_email_mxid_share_room": "Pozvite niekoho pomocou jeho mena, e-mailovej adresy, používateľského mena (napríklad <userId/>) alebo <a>zdieľajte túto miestnosť</a>.",
         "name_email_mxid_share_space": "Pozvite niekoho pomocou jeho mena, e-mailovej adresy, používateľského mena (napríklad <userId/>) alebo <a>zdieľajte tento priestor</a>.",
         "name_mxid_share_room": "Pozvite niekoho pomocou jeho mena, používateľského mena (napríklad <userId/>) alebo <a>zdieľate túto miestnosť</a>.",
@@ -1443,19 +1422,10 @@
         "render_reaction_images_description": "Niekedy sa označujú ako „vlastné emotikony“.",
         "report_to_moderators": "Nahlásiť moderátorom",
         "report_to_moderators_description": "V miestnostiach, ktoré podporujú moderovanie, môžete pomocou tlačidla \"Nahlásiť\" nahlásiť porušovanie pravidiel moderátorom miestnosti.",
-        "rust_crypto": "Implementácia kryptografie Rust",
-        "rust_crypto_disabled_notice": "V súčasnosti sa dá povoliť len prostredníctvom súboru config.json",
         "sliding_sync": "Režim kĺzavej synchronizácie",
-        "sliding_sync_checking": "Kontrolovanie…",
-        "sliding_sync_configuration": "Konfigurácia kĺzavej synchronizácie",
         "sliding_sync_description": "V štádiu aktívneho vývoja, nie je možné to vypnúť.",
-        "sliding_sync_disable_warning": "Pre vypnutie sa musíte odhlásiť a znova prihlásiť, používajte opatrne!",
         "sliding_sync_disabled_notice": "Odhláste sa a znova sa prihláste, aby sa to vyplo",
-        "sliding_sync_proxy_url_label": "URL adresa proxy servera",
-        "sliding_sync_proxy_url_optional_label": "URL adresa proxy servera (voliteľná)",
         "sliding_sync_server_no_support": "Váš server nemá natívnu podporu",
-        "sliding_sync_server_specify_proxy": "Váš server nemá natívnu podporu, musíte zadať proxy server",
-        "sliding_sync_server_support": "Váš server má natívnu podporu",
         "under_active_development": "V štádiu aktívneho vývoja.",
         "unrealiable_e2e": "Nespoľahlivé v šifrovaných miestnostiach",
         "video_rooms": "Video miestnosti",
@@ -1505,14 +1475,6 @@
         "view_rules": "Zobraziť pravidlá"
     },
     "language_dropdown_label": "Rozbaľovací zoznam jazykov",
-    "lazy_loading": {
-        "disabled_action": "Vymazať vyrovnávaciu pamäť a synchronizovať znovu",
-        "disabled_description1": "Použili ste aj %(brand)s na adrese %(host)s so zapnutou voľbou Načítanie zoznamu členov pri prvom zobrazení. V tejto verzii je Načítanie zoznamu členov pri prvom zobrazení vypnuté. Keď že lokálna vyrovnávacia pamäť nie je vzájomne kompatibilná s takýmito nastaveniami, %(brand)s potrebuje znovu synchronizovať údaje z vašeho účtu.",
-        "disabled_description2": "Ak máte %(brand)s s iným nastavením otvorený na ďalšej karte, prosím zatvorte ju, pretože použitie %(brand)s s rôznym nastavením na jednom zariadení vám spôsobí len problémy.",
-        "disabled_title": "Nekompatibilná lokálna vyrovnávacia pamäť",
-        "resync_description": "%(brand)s teraz vyžaduje 3-5× menej pamäte, pretože informácie o ostatných používateľoch načítava len podľa potreby. Prosím počkajte na dokončenie synchronizácie so serverom!",
-        "resync_title": "Prebieha aktualizácia %(brand)s"
-    },
     "leave_room_dialog": {
         "last_person_warning": "Ste tu jediný človek. Ak odídete, nikto sa už v budúcnosti nebude môcť pripojiť do tejto miestnosti, vrátane vás.",
         "leave_room_question": "Ste si istí, že chcete opustiť miestnosť '%(roomName)s'?",
@@ -1600,12 +1562,6 @@
         "all_messages_description": "Dostávajte upozornenia na každú správu",
         "class_global": "Celosystémové",
         "class_other": "Ďalšie",
-        "colour_bold": "Tučné",
-        "colour_grey": "Sivá",
-        "colour_muted": "Stlmené",
-        "colour_none": "Žiadne",
-        "colour_red": "Červená",
-        "colour_unsent": "Neodoslané",
         "default": "Predvolené",
         "email_pusher_app_display_name": "Emailové oznámenia",
         "enable_prompt_toast_description": "Povoliť oznámenia na ploche",
@@ -2391,11 +2347,9 @@
         "help_about": {
             "access_token_detail": "Váš prístupový token poskytuje úplný prístup k vášmu účtu. S nikým ho nezdieľajte.",
             "brand_version": "Verzia %(brand)s:",
-            "chat_bot": "Konverzácia s %(brand)s Bot",
             "clear_cache_reload": "Vymazať vyrovnávaciu pamäť a načítať znovu",
             "crypto_version": "Krypto verzia:",
             "help_link": "Pomoc pri používaní %(brand)s môžete získať kliknutím <a>sem</a>.",
-            "help_link_chat_bot": "Pomoc pri používaní aplikácie %(brand)s môžete získať kliknutím <a>sem</a>, alebo začnite konverzáciu s našim robotom pomocou tlačidla dole.",
             "homeserver": "Domovský server je <code>%(homeserverUrl)s</code>",
             "identity_server": "Server identity je <code>%(identityServerUrl)s</code>",
             "title": "Pomocník a o programe",
@@ -2412,24 +2366,15 @@
             "custom_font_description": "Nastavte názov písma, ktoré máte nainštalované na vašom systéme & %(brand)s sa ho pokúsi použiť.",
             "custom_font_name": "Meno systémového písma",
             "custom_font_size": "Použiť vlastnú veľkosť",
-            "custom_theme_add_button": "Pridať vzhľad",
             "custom_theme_error_downloading": "Chyba pri stiahnutí informácií o vzhľade.",
             "custom_theme_invalid": "Neplatná schéma vzhľadu.",
-            "custom_theme_success": "Vzhľad pridaný!",
-            "custom_theme_url": "URL adresa vlastného vzhľadu",
             "font_size": "Veľkosť písma",
-            "font_size_limit": "Vlastná veľkosť písma môže byť len v rozmedzí %(min)s pt až %(max)s pt",
-            "font_size_nan": "Veľkosť musí byť číslo",
-            "font_size_valid": "Použite veľkosť mezi %(min)s pt a %(max)s pt",
-            "heading": "Upravte svoj vzhľad",
             "image_size_default": "Predvolené",
             "image_size_large": "Veľký",
             "layout_bubbles": "Správy v bublinách",
             "layout_irc": "IRC (experimentálne)",
             "match_system_theme": "Prispôsobiť sa vzhľadu systému",
-            "subheading": "Nastavenia vzhľadu ovplyvnia len túto reláciu %(brand)s.",
-            "timeline_image_size": "Veľkosť obrázku na časovej osi",
-            "use_high_contrast": "Použiť vysoký kontrast"
+            "timeline_image_size": "Veľkosť obrázku na časovej osi"
         },
         "automatic_language_detection_syntax_highlight": "Povoliť automatickú detekciu jazyka pre zvýraznenie syntaxe",
         "autoplay_gifs": "Automaticky prehrať GIF animácie",
@@ -2456,7 +2401,6 @@
             "confirm_adding_email_body": "Kliknutím na tlačidlo nižšie potvrdíte pridanie emailovej adresy.",
             "confirm_adding_email_title": "Potvrdiť pridanie emailu",
             "deactivate_confirm_body": "Ste si istí, že chcete deaktivovať svoje konto? Je to nezvratné.",
-            "deactivate_confirm_body_password": "Aby ste mohli pokračovať, prosím zadajte svoje heslo:",
             "deactivate_confirm_body_sso": "Potvrďte deaktiváciu konta pomocou jednotného prihlásenia SSO na preukázanie svojej totožnosti.",
             "deactivate_confirm_content": "Potvrďte, že chcete deaktivovať svoje konto. Ak budete pokračovať:",
             "deactivate_confirm_content_1": "Svoje konto nebudete môcť opätovne aktivovať",
@@ -2473,7 +2417,6 @@
             "discovery_email_verification_instructions": "Overte odkaz vo vašej emailovej schránke",
             "discovery_msisdn_empty": "Možnosti nastavenia verejného profilu sa objavia po pridaní telefónneho čísla vyššie.",
             "discovery_needs_terms": "Súhlaste s podmienkami používania servera totožností (%(serverName)s), aby ste mohli byť nájdení zadaním emailovej adresy alebo telefónneho čísla.",
-            "discovery_section": "Objavovanie",
             "email_address_in_use": "Táto emailová adresa sa už používa",
             "email_address_label": "Emailová adresa",
             "email_not_verified": "Vaša emailová adresa nebola zatiaľ overená",
@@ -2494,8 +2437,6 @@
             "error_remove_3pid": "Nie je možné odstrániť kontaktné informácie",
             "error_revoke_email_discovery": "Nepodarilo sa zrušiť zdieľanie emailovej adresy",
             "error_revoke_msisdn_discovery": "Nepodarilo sa zrušiť zdieľanie telefónneho čísla",
-            "error_saving_profile": "Operáciu nebolo možné dokončiť",
-            "error_saving_profile_title": "Nepodarilo sa uložiť váš profil",
             "error_share_email_discovery": "Nepodarilo sa zdieľať emailovú adresu",
             "error_share_msisdn_discovery": "Nepodarilo sa zdieľanie telefónneho čísla",
             "external_account_management": "Údaje o vašom účte sú spravované samostatne na adrese <code>%(hostname)s</code>.",
@@ -3152,8 +3093,7 @@
         "my_threads_description": "Zobrazí všetky vlákna, v ktorých ste sa zúčastnili",
         "open_thread": "Otvoriť vlákno",
         "show_all_threads": "Zobraziť všetky vlákna",
-        "show_thread_filter": "Zobraziť:",
-        "unable_to_decrypt": "Nie je možné dešifrovať správu"
+        "show_thread_filter": "Zobraziť:"
     },
     "time": {
         "about_day_ago": "asi pred jedným dňom",
@@ -3196,7 +3136,6 @@
         },
         "creation_summary_dm": "%(creator)s vytvoril/a túto priamu správu.",
         "creation_summary_room": "%(creator)s vytvoril a nastavil miestnosť.",
-        "decryption_failure_blocked": "Odosielateľ vám zablokoval príjem tejto správy",
         "disambiguated_profile": "%(displayName)s (%(matrixId)s)",
         "download_action_decrypting": "Dešifrovanie",
         "download_action_downloading": "Preberanie",
@@ -3205,7 +3144,6 @@
             "tooltip_sub": "Kliknutím zobrazíte úpravy",
             "tooltip_title": "Upravené %(date)s"
         },
-        "encrypted_historical_messages_unavailable": "Šifrované správy pred týmto bodom nie sú k dispozícii.",
         "error_no_renderer": "Nie je možné zobraziť túto udalosť",
         "error_rendering_message": "Nemožno načítať túto správu",
         "historical_messages_unavailable": "Nemôžete vidieť predchádzajúce správy",
@@ -3447,8 +3385,7 @@
         "reactions": {
             "add_reaction_prompt": "Pridať reakciu",
             "custom_reaction_fallback_label": "Vlastná reakcia",
-            "label": "%(reactors)s reagovali %(content)s",
-            "tooltip": "<reactors/><reactedWith>reagoval %(shortName)s</reactedWith>"
+            "label": "%(reactors)s reagovali %(content)s"
         },
         "read_receipt_title": {
             "one": "Videl %(count)s človek",
@@ -3575,7 +3512,8 @@
             },
             "no_change": {
                 "one": "%(oneUser)snespravil žiadne zmeny",
-                "other": "%(oneUser)s nevykonal žiadne zmeny %(count)s krát"
+                "few": "%(oneUser)s nevykonal žiadne zmeny %(count)s-krát",
+                "other": "%(oneUser)s nevykonal žiadne zmeny %(count)s-krát"
             },
             "no_change_multiple": {
                 "one": "%(severalUsers)snespravili žiadne zmeny",
@@ -3583,20 +3521,23 @@
                 "other": "%(severalUsers)s nevykonali žiadne zmeny %(count)s-krát"
             },
             "pinned_events": {
-                "other": "%(oneUser)szmenil <a>pripnuté správy</a> v miestnosti %(count)s krát",
-                "one": "%(oneUser)szmenil <a>pripnuté správy</a> v miestnosti"
+                "one": "%(oneUser)szmenil <a>pripnuté správy</a> v miestnosti",
+                "few": "%(oneUser)szmenil <a>pripnuté správy</a> v miestnosti %(count)s-krát",
+                "other": "%(oneUser)szmenil <a>pripnuté správy</a> v miestnosti %(count)s-krát"
             },
             "pinned_events_multiple": {
-                "other": "%(severalUsers)szmenili <a>pripnuté správy</a> v miestnosti %(count)s krát",
-                "one": "%(severalUsers)szmenili <a>pripnuté správy</a> v miestnosti"
+                "one": "%(severalUsers)szmenili <a>pripnuté správy</a> v miestnosti",
+                "few": "%(severalUsers)szmenili <a>pripnuté správy</a> v miestnosti %(count)s-krát",
+                "other": "%(severalUsers)szmenili <a>pripnuté správy</a> v miestnosti %(count)s-krát"
             },
             "redacted": {
                 "other": "%(oneUser)s odstránil/a %(count)s správ",
                 "one": "%(oneUser)sodstránil správu"
             },
             "redacted_multiple": {
-                "other": "%(severalUsers)sodstránili %(count)s správ",
-                "one": "%(severalUsers)s odstránili správu"
+                "one": "%(severalUsers)s odstránili správu",
+                "few": "%(severalUsers)sodstránili %(count)s správy",
+                "other": "%(severalUsers)sodstránili %(count)s správ"
             },
             "rejected_invite": {
                 "one": "%(oneUser)sodmietol pozvanie",
@@ -3619,12 +3560,14 @@
                 "other": "%(severalUsers)s%(count)s-krát odišli a znovu vstúpili"
             },
             "server_acls": {
-                "other": "%(oneUser)szmenil ACL servera %(count)s krát",
-                "one": "%(oneUser)s zmenil ACL servera"
+                "one": "%(oneUser)s zmenil ACL servera",
+                "few": "%(oneUser)szmenil ACL servera %(count)s-krát",
+                "other": "%(oneUser)szmenil ACL servera %(count)s-krát"
             },
             "server_acls_multiple": {
-                "other": "%(severalUsers)szmenilo ACL servera %(count)s krát",
-                "one": "%(severalUsers)s zmenilo ACL servera"
+                "one": "%(severalUsers)s zmenilo ACL servera",
+                "few": "%(severalUsers)szmenilo ACL servera %(count)s-krát",
+                "other": "%(severalUsers)szmenilo ACL servera %(count)s-krát"
             },
             "unbanned": {
                 "other": "mal %(count)s krát povolený vstup",
@@ -3810,7 +3753,6 @@
         "already_in_call_person": "S touto osobou už hovor prebieha.",
         "answered_elsewhere": "Hovor prijatý inde",
         "answered_elsewhere_description": "Hovor bol prijatý na inom zariadení.",
-        "audio_devices": "Zvukové zariadenia",
         "call_failed": "Zlyhanie hovoru",
         "call_failed_description": "Hovor nemohol byť realizovaný",
         "call_failed_media": "Hovor zlyhal, pretože nebolo možné získať prístup k webkamere alebo mikrofónu. Skontrolujte, či:",
@@ -3897,7 +3839,6 @@
         "user_is_presenting": "%(sharerName)s prezentuje",
         "video_call": "Video hovor",
         "video_call_started": "Videohovor bol spustený",
-        "video_devices": "Video zariadenia",
         "voice_call": "Hlasový hovor",
         "you_are_presenting": "Prezentujete"
     },

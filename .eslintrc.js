@@ -34,6 +34,14 @@ module.exports = {
                 ["*.mxcUrlToHttp", "*.getHttpUriForMxc"],
                 "Use Media helper instead to centralise access for customisation.",
             ),
+            ...buildRestrictedPropertiesOptions(["window.setImmediate"], "Use setTimeout instead."),
+        ],
+        "no-restricted-globals": [
+            "error",
+            {
+                name: "setImmediate",
+                message: "Use setTimeout instead.",
+            },
         ],
 
         "import/no-duplicates": ["error"],
@@ -76,6 +84,9 @@ module.exports = {
                         group: [
                             "matrix-js-sdk/src/**",
                             "!matrix-js-sdk/src/matrix",
+                            "!matrix-js-sdk/src/crypto-api",
+                            "!matrix-js-sdk/src/types",
+                            "!matrix-js-sdk/src/testing",
                             "matrix-js-sdk/lib",
                             "matrix-js-sdk/lib/",
                             "matrix-js-sdk/lib/**",
@@ -95,8 +106,6 @@ module.exports = {
                             "!matrix-js-sdk/src/secret-storage",
                             "!matrix-js-sdk/src/room-hierarchy",
                             "!matrix-js-sdk/src/rendezvous",
-                            "!matrix-js-sdk/src/rendezvous/transports",
-                            "!matrix-js-sdk/src/rendezvous/channels",
                             "!matrix-js-sdk/src/indexeddb-worker",
                             "!matrix-js-sdk/src/pushprocessor",
                             "!matrix-js-sdk/src/extensible_events_v1",
@@ -104,13 +113,8 @@ module.exports = {
                             "!matrix-js-sdk/src/extensible_events_v1/PollResponseEvent",
                             "!matrix-js-sdk/src/extensible_events_v1/PollEndEvent",
                             "!matrix-js-sdk/src/extensible_events_v1/InvalidEventError",
-                            "!matrix-js-sdk/src/crypto-api",
-                            "!matrix-js-sdk/src/crypto-api/verification",
                             "!matrix-js-sdk/src/crypto",
-                            "!matrix-js-sdk/src/crypto/algorithms",
-                            "!matrix-js-sdk/src/crypto/api",
                             "!matrix-js-sdk/src/crypto/aes",
-                            "!matrix-js-sdk/src/crypto/backup",
                             "!matrix-js-sdk/src/crypto/olmlib",
                             "!matrix-js-sdk/src/crypto/crypto",
                             "!matrix-js-sdk/src/crypto/keybackup",
@@ -120,13 +124,6 @@ module.exports = {
                             "!matrix-js-sdk/src/crypto/CrossSigning",
                             "!matrix-js-sdk/src/crypto/recoverykey",
                             "!matrix-js-sdk/src/crypto/dehydration",
-                            "!matrix-js-sdk/src/crypto/verification",
-                            "!matrix-js-sdk/src/crypto/verification/SAS",
-                            "!matrix-js-sdk/src/crypto/verification/QRCode",
-                            "!matrix-js-sdk/src/crypto/verification/request",
-                            "!matrix-js-sdk/src/crypto/verification/request/VerificationRequest",
-                            "!matrix-js-sdk/src/common-crypto",
-                            "!matrix-js-sdk/src/common-crypto/CryptoBackend",
                             "!matrix-js-sdk/src/oidc",
                             "!matrix-js-sdk/src/oidc/discovery",
                             "!matrix-js-sdk/src/oidc/authorize",
@@ -169,7 +166,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: ["src/**/*.{ts,tsx}", "test/**/*.{ts,tsx}", "cypress/**/*.ts", "playwright/**/*.ts"],
+            files: ["src/**/*.{ts,tsx}", "test/**/*.{ts,tsx}", "playwright/**/*.ts"],
             extends: ["plugin:matrix-org/typescript", "plugin:matrix-org/react"],
             rules: {
                 "@typescript-eslint/explicit-function-return-type": [
@@ -233,14 +230,14 @@ module.exports = {
             },
         },
         {
-            files: ["test/**/*.{ts,tsx}", "cypress/**/*.ts", "playwright/**/*.ts"],
+            files: ["test/**/*.{ts,tsx}", "playwright/**/*.ts"],
             extends: ["plugin:matrix-org/jest"],
             rules: {
                 // We don't need super strict typing in test utilities
                 "@typescript-eslint/explicit-function-return-type": "off",
                 "@typescript-eslint/explicit-member-accessibility": "off",
 
-                // Jest/Cypress specific
+                // Jest/Playwright specific
 
                 // Disabled tests are a reality for now but as soon as all of the xits are
                 // eliminated, we should enforce this.
@@ -256,27 +253,9 @@ module.exports = {
             },
         },
         {
-            files: ["cypress/**/*.ts"],
-            parserOptions: {
-                project: ["./cypress/tsconfig.json"],
-            },
-            rules: {
-                // Cypress "promises" work differently - disable some related rules
-                "jest/valid-expect": "off",
-                "jest/valid-expect-in-promise": "off",
-                "jest/no-done-callback": "off",
-            },
-        },
-        {
             files: ["playwright/**/*.ts"],
             parserOptions: {
                 project: ["./playwright/tsconfig.json"],
-            },
-            rules: {
-                // Cypress "promises" work differently - disable some related rules
-                "jest/valid-expect": "off",
-                "jest/valid-expect-in-promise": "off",
-                "jest/no-done-callback": "off",
             },
         },
     ],

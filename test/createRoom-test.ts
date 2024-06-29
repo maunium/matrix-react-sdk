@@ -15,7 +15,8 @@ limitations under the License.
 */
 
 import { mocked, Mocked } from "jest-mock";
-import { CryptoApi, MatrixClient, Device, Preset, RoomType } from "matrix-js-sdk/src/matrix";
+import { MatrixClient, Device, Preset, RoomType } from "matrix-js-sdk/src/matrix";
+import { CryptoApi } from "matrix-js-sdk/src/crypto-api";
 // eslint-disable-next-line no-restricted-imports
 import { MatrixRTCSession } from "matrix-js-sdk/src/matrixrtc/MatrixRTCSession";
 
@@ -70,7 +71,7 @@ describe("createRoom", () => {
         // widget should be immutable for admins
         expect(widgetPower).toBeGreaterThan(100);
         // and we should have been reset back to admin
-        expect(client.setPowerLevel).toHaveBeenCalledWith(roomId, userId, 100, null);
+        expect(client.setPowerLevel).toHaveBeenCalledWith(roomId, userId, 100);
     });
 
     it("sets up Element video rooms correctly", async () => {
@@ -99,7 +100,7 @@ describe("createRoom", () => {
         // call should be immutable for admins
         expect(callPower).toBeGreaterThan(100);
         // and we should have been reset back to admin
-        expect(client.setPowerLevel).toHaveBeenCalledWith(roomId, userId, 100, null);
+        expect(client.setPowerLevel).toHaveBeenCalledWith(roomId, userId, 100);
     });
 
     it("doesn't create calls in non-video-rooms", async () => {
