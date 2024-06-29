@@ -16,8 +16,8 @@ limitations under the License.
 
 import { JSHandle, Page } from "@playwright/test";
 import { uniqueId } from "lodash";
+import { type MatrixClient } from "matrix-js-sdk/src/matrix";
 
-import type { MatrixClient } from "matrix-js-sdk/src/matrix";
 import type { Logger } from "matrix-js-sdk/src/logger";
 import type { SecretStorageKeyDescription } from "matrix-js-sdk/src/secret-storage";
 import type { Credentials, HomeserverInstance } from "../plugins/homeserver";
@@ -45,10 +45,6 @@ export interface CreateBotOpts {
      * Whether to generate cross-signing keys
      */
     bootstrapCrossSigning?: boolean;
-    /**
-     * Whether to use the rust crypto impl. Defaults to false (for now!)
-     */
-    rustCrypto?: boolean;
     /**
      * Whether to bootstrap the secret storage
      */
@@ -188,11 +184,7 @@ export class Bot extends Client {
                     return cli;
                 }
 
-                if (opts.rustCrypto) {
-                    await cli.initRustCrypto({ useIndexedDB: false });
-                } else {
-                    await cli.initCrypto();
-                }
+                await cli.initRustCrypto({ useIndexedDB: false });
                 cli.setGlobalErrorOnUnknownDevices(false);
                 await cli.startClient();
 
