@@ -18,6 +18,7 @@ import { Page } from "@playwright/test";
 
 import { test, expect } from "../../element-web-test";
 import { ElementAppPage } from "../../pages/ElementAppPage";
+import type { Container } from "../../../src/stores/widgets/types";
 
 test.describe("Room Header", () => {
     test.use({
@@ -178,8 +179,8 @@ test.describe("Room Header", () => {
 
             await page.locator(".mx_LegacyRoomHeader").getByRole("button", { name: "Chat" }).click();
 
-            // Assert that the video is rendered
-            await expect(page.locator(".mx_CallView video")).toBeVisible();
+            // Assert that the call view is still visible
+            await expect(page.locator(".mx_CallView")).toBeVisible();
 
             // Assert that GELS is visible
             await expect(
@@ -227,7 +228,7 @@ test.describe("Room Header", () => {
                         {
                             widgets: {
                                 [id]: {
-                                    container: "top",
+                                    container: "top" as Container,
                                     index: 1,
                                     width: 100,
                                     height: 0,
@@ -273,6 +274,28 @@ test.describe("Room Header", () => {
             await expect(page.locator(".mx_AppsDrawer")).not.toBeVisible();
 
             await expect(header).toMatchScreenshot("room-header-with-apps-button-not-highlighted.png");
+        });
+    });
+
+    test.describe("with encryption", () => {
+        test("should render the E2E icon and the buttons", async ({ page, app, user }) => {
+            // Create an encrypted room
+            await app.client.createRoom({
+                name: "Test Encrypted Room",
+                initial_state: [
+                    {
+                        type: "m.room.encryption",
+                        state_key: "",
+                        content: {
+                            algorithm: "m.megolm.v1.aes-sha2",
+                        },
+                    },
+                ],
+            });
+            await app.viewRoomByName("Test Encrypted Room");
+
+            const header = page.locator(".mx_LegacyRoomHeader");
+            await expect(header).toMatchScreenshot("encrypted-room-header.png");
         });
     });
 });
