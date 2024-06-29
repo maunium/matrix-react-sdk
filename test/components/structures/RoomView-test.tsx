@@ -70,7 +70,7 @@ import WidgetUtils from "../../../src/utils/WidgetUtils";
 import { WidgetType } from "../../../src/widgets/WidgetType";
 import WidgetStore from "../../../src/stores/WidgetStore";
 import { ViewRoomErrorPayload } from "../../../src/dispatcher/payloads/ViewRoomErrorPayload";
-import { SearchScope } from "../../../src/components/views/rooms/SearchBar";
+import { SearchScope } from "../../../src/Searching";
 
 const RoomView = wrapInMatrixClientContext(_RoomView);
 
@@ -353,7 +353,6 @@ describe("RoomView", () => {
                             content: {
                                 algorithm: MEGOLM_ALGORITHM,
                             },
-                            user_id: cli.getUserId()!,
                             sender: cli.getUserId()!,
                             state_key: "",
                             room_id: localRoom.roomId,
