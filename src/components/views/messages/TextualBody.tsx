@@ -59,23 +59,19 @@ interface IState {
 }
 
 export default class TextualBody extends React.Component<IBodyProps, IState> {
-    private readonly contentRef = createRef<HTMLSpanElement>();
+    private readonly contentRef = createRef<HTMLDivElement>();
 
     private unmounted = false;
     private pills: Element[] = [];
     private tooltips: Element[] = [];
 
     public static contextType = RoomContext;
-    public context!: React.ContextType<typeof RoomContext>;
+    public declare context: React.ContextType<typeof RoomContext>;
 
-    public constructor(props: IBodyProps) {
-        super(props);
-
-        this.state = {
-            links: [],
-            widgetHidden: false,
-        };
-    }
+    public state = {
+        links: [],
+        widgetHidden: false,
+    };
 
     public componentDidMount(): void {
         if (!this.props.editState) {
@@ -566,38 +562,40 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
         }
         const mxEvent = this.props.mxEvent;
         const content = mxEvent.getContent();
-        let isNotice = false;
-        let isEmote = false;
-        let isCaption = false;
+        const isNotice = content.msgtype === MsgType.Notice;
+        const isEmote = content.msgtype === MsgType.Emote;
+        // @ts-ignore
+        const isCaption = [MsgType.Image, MsgType.File, MsgType.Audio, MsgType.Video].includes(content.msgtype);
+
+        const willHaveWrapper =
+            this.props.replacingEventId || this.props.isSeeingThroughMessageHiddenForModeration || isEmote;
 
         // only strip reply if this is the original replying event, edits thereafter do not have the fallback
         const stripReply = !mxEvent.replacingEvent() && !!getParentEventId(mxEvent);
-        isEmote = content.msgtype === MsgType.Emote;
-        isNotice = content.msgtype === MsgType.Notice;
-        // @ts-ignore
-        isCaption = [MsgType.Image, MsgType.File, MsgType.Audio, MsgType.Video].includes(content.msgtype);
-        let body = HtmlUtils.bodyToHtml(content, this.props.highlights, {
+
+        const htmlOpts = {
             disableBigEmoji: isEmote || !SettingsStore.getValue<boolean>("TextualBody.enableBigEmoji"),
             // Part of Replies fallback support
             stripReplyFallback: stripReply,
-            ref: this.contentRef,
-            returnString: false,
-        });
+        };
+        let body = willHaveWrapper
+            ? HtmlUtils.bodyToSpan(content, this.props.highlights, htmlOpts, this.contentRef, false)
+            : HtmlUtils.bodyToDiv(content, this.props.highlights, htmlOpts, this.contentRef);
 
         if (this.props.replacingEventId) {
             body = (
-                <>
+                <div dir="auto" className="mx_EventTile_annotated">
                     {body}
                     {this.renderEditedMarker()}
-                </>
+                </div>
             );
         }
         if (this.props.isSeeingThroughMessageHiddenForModeration) {
             body = (
-                <>
+                <div dir="auto" className="mx_EventTile_annotated">
                     {body}
                     {this.renderPendingModerationMarker()}
-                </>
+                </div>
             );
         }
 
@@ -628,7 +626,7 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
 
         if (isEmote) {
             return (
-                <div className="mx_MEmoteBody mx_EventTile_content" onClick={this.onBodyLinkClick}>
+                <div className="mx_MEmoteBody mx_EventTile_content" onClick={this.onBodyLinkClick} dir="auto">
                     *&nbsp;
                     <span className="mx_MEmoteBody_sender" onClick={this.onEmoteSenderClick}>
                         {mxEvent.sender ? mxEvent.sender.name : mxEvent.getSender()}
