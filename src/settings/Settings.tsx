@@ -311,6 +311,13 @@ export const SETTINGS: { [setting: string]: ISetting } = {
         supportedLevelsAreOrdered: true,
         default: false,
     },
+    "feature_show_shared_rooms": {
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
+        displayName: _td("Show rooms in common with another user in the member info panel"),
+        default: false,
+        isFeature: true,
+        labsGroup: LabGroup.Profile,
+    },
     "feature_exclude_insecure_devices": {
         isFeature: true,
         labsGroup: LabGroup.Encryption,

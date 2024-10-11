@@ -712,6 +712,11 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
         // the original
         const ev = this.props.mxEvent.replacingEvent() ?? this.props.mxEvent;
 
+        if (ev.viewingRedactedContent) {
+            // Not actually an e2ee thing, but we reuse the same slot in the UI.
+            return <E2ePadlock title={_t("This is a deleted message")} icon={E2ePadlockIcon.Redacted} />;
+        }
+
         // no icon for local rooms
         if (isLocalRoom(ev.getRoomId()!)) return null;
 
@@ -1497,6 +1502,8 @@ enum E2ePadlockIcon {
 
     /** red shield with (!) */
     Warning = "warning",
+
+    Redacted = "viewingRedacted",
 
     /** key in grey circle */
     DecryptionFailure = "decryption_failure",

@@ -17,6 +17,7 @@ import dis from "../../../dispatcher/dispatcher";
 import { _t, UserFriendlyError } from "../../../languageHandler";
 import SdkConfig from "../../../SdkConfig";
 import IdentityAuthClient from "../../../IdentityAuthClient";
+import UserInfoSharedRooms from "../right_panel/UserInfoSharedRooms";
 import InviteReason from "../elements/InviteReason";
 import { IOOBData } from "../../../stores/ThreepidInviteStore";
 import Spinner from "../elements/Spinner";
@@ -311,6 +312,7 @@ export default class RoomPreviewBar extends React.Component<IProps, IState> {
         let secondaryActionHandler: (() => void) | undefined;
         let secondaryActionLabel: string | undefined;
         let footer: JSX.Element | undefined;
+        let extraContext: JSX.Element | undefined;
         const extraComponents: JSX.Element[] = [];
 
         const messageCase = this.getMessageCase();
@@ -549,6 +551,11 @@ export default class RoomPreviewBar extends React.Component<IProps, IState> {
                 secondaryActionLabel = _t("action|reject");
                 secondaryActionHandler = this.props.onRejectClick;
 
+                if (SettingsStore.getValue("feature_show_shared_rooms") && inviteMember?.userId) {
+                    // @ts-ignore
+                    extraContext = <UserInfoSharedRooms userId={inviteMember.userId} compact={true} />;
+                }
+
                 if (this.props.onRejectAndIgnoreClick) {
                     extraComponents.push(
                         <AccessibleButton kind="secondary" onClick={this.props.onRejectAndIgnoreClick} key="ignore">
@@ -556,6 +563,7 @@ export default class RoomPreviewBar extends React.Component<IProps, IState> {
                         </AccessibleButton>,
                     );
                 }
+
                 break;
             }
             case MessageCase.ViewingRoom: {
@@ -715,6 +723,7 @@ export default class RoomPreviewBar extends React.Component<IProps, IState> {
                 <div className="mx_RoomPreviewBar_message">
                     {titleElement}
                     {subTitleElements}
+                    {extraContext}
                 </div>
                 {reasonElement}
                 <div
