@@ -77,7 +77,7 @@ export const EventEditor: React.FC<IEventEditorProps> = ({ fieldDefs, defaultCon
             id={def.id}
             label={_t(def.label)}
             size={42}
-            autoFocus={defaultContent === undefined && i === 0}
+            autoFocus={i === 0}
             type="text"
             autoComplete="on"
             value={fieldData[i]}
@@ -123,7 +123,6 @@ export const EventEditor: React.FC<IEventEditorProps> = ({ fieldDefs, defaultCon
                 element="textarea"
                 onValidate={validateEventContent}
                 ref={contentField}
-                autoFocus={!!defaultContent}
             />
         </BaseTool>
     );

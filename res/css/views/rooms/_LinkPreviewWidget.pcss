@@ -7,11 +7,10 @@ Please see LICENSE files in the repository root for full details.
 */
 
 .mx_LinkPreviewWidget {
-    margin: $spacing-16 0 $spacing-16 auto;
+    margin: $spacing-4 0 $spacing-4 auto;
     display: flex;
     column-gap: $spacing-4;
     border-inline-start: 2px solid $preview-widget-bar-color;
-    border-radius: 2px;
     color: $info-plinth-fg-color;
 
     .mx_MatrixChat_useCompactLayout & {
@@ -28,12 +27,12 @@ Please see LICENSE files in the repository root for full details.
 
         .mx_LinkPreviewWidget_image,
         .mx_LinkPreviewWidget_caption {
-            margin-inline-start: $spacing-16;
+            margin-inline-start: $spacing-4;
             min-width: 0; /* Prevent blowout */
         }
 
         .mx_LinkPreviewWidget_image {
-            flex: 0 0 100px;
+            flex: 0 0 64px;
             text-align: center;
             cursor: pointer;
         }
@@ -61,9 +60,9 @@ Please see LICENSE files in the repository root for full details.
         }
 
         .mx_LinkPreviewWidget_description {
-            margin-top: $spacing-8;
             word-wrap: break-word;
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 2;
+            text-overflow: ellipsis;
         }
     }
 }

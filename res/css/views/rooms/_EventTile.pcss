@@ -877,6 +877,15 @@ $left-gutter: 64px;
     }
 }
 
+.mx_EventTile_e2eIcon_viewingRedacted {
+    &::after {
+        mask-image: url("$(res)/img/feather-customised/trash.custom.svg");
+        background-color: $muted-fg-color;
+    }
+
+    opacity: 1;
+}
+
 .mx_EventTile_body {
     a:hover {
         text-decoration: underline;
@@ -899,6 +908,10 @@ $left-gutter: 64px;
         /* Override the default colors of the 'github-markdown-css' library
         (#fff for light theme, #000 for dark theme) to match the inherited theme */
         background-color: inherit !important;
+
+        &[data-mx-emoticon] {
+            vertical-align: middle;
+        }
     }
 
     .mx_EventTile_clamp & {

@@ -465,9 +465,6 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             SettingsStore.watchSetting("readMarkerOutOfViewThresholdMs", null, (...[, , , value]) =>
                 this.setState({ readMarkerOutOfViewThresholdMs: value as number }),
             ),
-            SettingsStore.watchSetting("showHiddenEventsInTimeline", null, (...[, , , value]) =>
-                this.setState({ showHiddenEvents: value as boolean }),
-            ),
             SettingsStore.watchSetting("urlPreviewsEnabled", null, this.onUrlPreviewsEnabledChange),
             SettingsStore.watchSetting("urlPreviewsEnabled_e2ee", null, this.onUrlPreviewsEnabledChange),
             SettingsStore.watchSetting("feature_dynamic_room_predecessors", null, (...[, , , value]) =>
@@ -610,6 +607,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             showJoinLeaves: SettingsStore.getValue("showJoinLeaves", roomId),
             showAvatarChanges: SettingsStore.getValue("showAvatarChanges", roomId),
             showDisplaynameChanges: SettingsStore.getValue("showDisplaynameChanges", roomId),
+            showHiddenEvents: SettingsStore.getValue("showHiddenEventsInTimeline", roomId),
             wasContextSwitch: this.context.roomViewStore.getWasContextSwitch(),
             mainSplitContentType: room ? this.getMainSplitContentType(room) : undefined,
             initialEventId: undefined, // default to clearing this, will get set later in the method if needed
@@ -672,6 +670,9 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         this.settingWatchers = this.settingWatchers.concat([
             SettingsStore.watchSetting("showReadReceipts", roomId, (...[, , , value]) =>
                 this.setState({ showReadReceipts: value as boolean }),
+            ),
+            SettingsStore.watchSetting("showHiddenEventsInTimeline", roomId, (...[, , , value]) =>
+                this.setState({ showHiddenEvents: value as boolean }),
             ),
             SettingsStore.watchSetting("showRedactions", roomId, (...[, , , value]) =>
                 this.setState({ showRedactions: value as boolean }),

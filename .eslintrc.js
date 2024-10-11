@@ -1,4 +1,5 @@
 module.exports = {
+    root: true,
     plugins: ["matrix-org"],
     extends: ["plugin:matrix-org/babel", "plugin:matrix-org/react", "plugin:matrix-org/a11y"],
     parserOptions: {

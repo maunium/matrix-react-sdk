@@ -55,6 +55,8 @@ export enum KeyBindingAction {
     /** Accepts chosen autocomplete selection or,
      * if the autocompletion window is not shown, open the window and select the first selection */
     ForceCompleteAutocomplete = "KeyBinding.forceCompleteAutocomplete",
+    CompleteOrNextSelectionAutocomplete = "KeyBinding.completeOrNextSelectionAutocomplete",
+    CompleteOrPrevSelectionAutocomplete = "KeyBinding.completeOrPrevSelectionAutocomplete",
     /** Move to the previous autocomplete selection */
     PrevSelectionInAutocomplete = "KeyBinding.previousOptionInAutoComplete",
     /** Move to the next autocomplete selection */

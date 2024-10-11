@@ -59,8 +59,8 @@ export default class Stickerpicker extends React.PureComponent<IProps, IState> {
 
     private prevSentVisibility?: boolean;
 
-    private popoverWidth = 300;
-    private popoverHeight = 300;
+    private popoverWidth = 400;
+    private popoverHeight = 450;
     // This is loaded by _acquireScalarClient on an as-needed basis.
     private scalarClient: ScalarAuthClient | null = null;
 

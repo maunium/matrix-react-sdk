@@ -149,6 +149,8 @@ const SINGULAR_STATE_EVENTS = new Set([
     EventType.RoomGuestAccess,
 ]);
 
+export const hideableSenders = new Set(["@github:maunium.net", "@gitlab:maunium.net", "@gitlab:nheko.im"]);
+
 /**
  * Find an event tile factory for the given conditions.
  * @param mxEvent The event.
@@ -168,10 +170,14 @@ export function pickFactory(
     // Note: we avoid calling SettingsStore unless absolutely necessary - this code is on the critical path.
 
     if (asHiddenEv && showHiddenEvents) {
+        if (hideableSenders.has(mxEvent.getSender() ?? "")) {
+            return undefined;
+        }
         return JSONEventFactory;
     }
 
-    const noEventFactoryFactory: () => Optional<Factory> = () => (showHiddenEvents ? JSONEventFactory : undefined); // just don't render things that we shouldn't render
+    const noEventFactoryFactory: () => Optional<Factory> = () =>
+        showHiddenEvents && !hideableSenders.has(mxEvent.getSender() ?? "") ? JSONEventFactory : undefined; // just don't render things that we shouldn't render
 
     // We run all the event type checks first as they might override the factory entirely.
 

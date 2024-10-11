@@ -18,6 +18,7 @@ import Search from "./Search";
 import Preview from "./Preview";
 import QuickReactions from "./QuickReactions";
 import Category, { CategoryKey, ICategory } from "./Category";
+import AccessibleButton from "../elements/AccessibleButton";
 import { filterBoolean } from "../../../utils/arrays";
 import {
     IAction as RovingAction,
@@ -37,6 +38,7 @@ export const EMOJIS_PER_ROW = 8;
 const ZERO_WIDTH_JOINER = "\u200D";
 
 interface IProps {
+    allowUnlisted?: boolean;
     selectedEmojis?: Set<string>;
     onChoose(unicode: string): boolean;
     onFinished(): void;
@@ -341,6 +343,10 @@ class EmojiPicker extends React.Component<IProps, IState> {
         }
     };
 
+    private reactWith = (reaction: string): void => {
+        this.props.onChoose(reaction);
+    };
+
     private static categoryHeightForEmojiCount(count: number): number {
         if (count === 0) {
             return 0;
@@ -396,6 +402,11 @@ class EmojiPicker extends React.Component<IProps, IState> {
                                     return categoryElement;
                                 })}
                             </AutoHideScrollbar>
+                            {this.props.allowUnlisted && this.state.filter && (
+                                <AccessibleButton kind="link" onClick={() => this.reactWith(this.state.filter)}>
+                                    React with "{this.state.filter}"
+                                </AccessibleButton>
+                            )}
                             {this.state.previewEmoji ? (
                                 <Preview emoji={this.state.previewEmoji} />
                             ) : (

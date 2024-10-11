@@ -1,4 +1,10 @@
 {
+    "Show rooms in common with another user in the member info panel": "Show rooms in common with another user in the member info panel",
+    "You share no rooms in common with this user.": "You share no rooms in common with this user.",
+    "There was an error fetching shared rooms with this user.": "There was an error fetching shared rooms with this user.",
+    "You are both participating in <rooms></rooms>": "You are both participating in <rooms></rooms>",
+    "You are both participating in <rooms></rooms> and %(hidden)s more": "You are both participating in <rooms></rooms> and %(hidden)s more",
+    "Shared Rooms": "Shared Rooms",
     "a11y": {
         "emoji_picker": "Emoji picker",
         "jump_first_invite": "Jump to first invite.",
@@ -18,6 +24,8 @@
         "unread_messages": "Unread messages.",
         "user_menu": "User menu"
     },
+    "This is a deleted message": "This is a deleted message",
+    "View content": "View content",
     "a11y_jump_first_unread_room": "Jump to first unread room.",
     "action": {
         "accept": "Accept",
